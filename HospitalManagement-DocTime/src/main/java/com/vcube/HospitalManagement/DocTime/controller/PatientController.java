@@ -35,12 +35,12 @@ public class PatientController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
 
-	@GetMapping({"/allPatients", "/all"})
+	@GetMapping({"/allPatients", "/allpatients", "/all", "/getallpatients", "/getpatients", "/getAllPatients"})
 	public ResponseEntity<List<Patient>> getAllPatients() {
 		return ResponseEntity.ok(patientService.getAllPatient());
 	}
 
-	@GetMapping({"/patientbyid/{id}", "/docbyid/{id}", "/{id}"})
+	@GetMapping({"/patientbyid/{id}", "/docbyid/{id}", "/{id:[0-9]+}"})
 	public ResponseEntity<Patient> getPatientById(@PathVariable Integer id) {
 		return ResponseEntity.ok(patientService.getPatientById(id));
 	}

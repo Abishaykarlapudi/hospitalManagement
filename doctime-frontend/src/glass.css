@@ -2223,3 +2223,1757 @@ table td {
   border: 1px solid rgba(6, 182, 212, 0.35) !important;
   color: #38bdf8 !important;
 }
+
+
+/* ==========================================================================
+   DOCTIME MASTER UNIVERSAL HIGH-CONTRAST FULL-SCREEN RESPONSIVE THEME
+   Addresses user requirements:
+   1. Cover full page on laptops & universal devices (100% width, fluid layout)
+   2. Remove distracting background designs & apply sleek deep-space modern dark canvas
+   3. Top bar styling with dark navy backdrop & crisp white/cyan text
+   4. Toolbar card styling with dark slate backdrop, crisp controls & icons
+   5. Search bar styling with dark inputs, vivid borders & crisp readable text
+   6. All tables & table cards with dark slate backdrops, sky blue headers & bright cell text
+   7. .contact-link styled in role-specific colors (Doctor: Emerald, Patient: Orange, Hospital: Cyan)
+   8. Title card & auth card CSS for login pages with high-contrast inputs
+   9. Universal visible colors for all KPI stats, cards, badges, and modals
+   ========================================================================== */
+
+/* 1. Full Page Coverage & Universal Devices */
+html, body, #root, .doctime-root-app {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #090e1a !important;
+  background-image: none !important;
+  color: #f8fafc !important;
+  overflow-x: hidden !important;
+}
+
+.portal-page-view,
+.app-container,
+.doctor-dashboard-layout,
+.patient-dashboard-layout,
+.portal-hub-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: calc(100vh - 65px) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #090e1a !important;
+  background-image: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.main-content,
+.content,
+.dashboard-container,
+.doctor-main-content,
+.patient-main-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 24px clamp(16px, 2.5vw, 48px) !important;
+  box-sizing: border-box !important;
+  flex: 1 !important;
+}
+
+/* 2. Header Top Bar */
+.global-portal-bar,
+.topbar,
+.doctor-header,
+.patient-header {
+  width: 100% !important;
+  max-width: 100% !important;
+  background: #0d1527 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45) !important;
+  padding: 16px clamp(16px, 2.5vw, 40px) !important;
+  box-sizing: border-box !important;
+}
+
+.global-brand strong,
+.topbar h1,
+.doc-brand h3,
+.patient-brand h3 {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+.topbar .eyebrow,
+.doc-link-indicator,
+.patient-link-indicator,
+.portal-tag-pill {
+  color: #38bdf8 !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.2px !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.3) !important;
+}
+
+.topbar .topbar-subtitle,
+.doctor-header p,
+.patient-header p {
+  color: #94a3b8 !important;
+  font-size: 13.5px !important;
+}
+
+.refresh-btn,
+.portal-switch-pill,
+.auth-back-btn {
+  background: #182238 !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+}
+
+.refresh-btn:hover,
+.portal-switch-pill:hover,
+.auth-back-btn:hover {
+  background: rgba(56, 189, 248, 0.25) !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35) !important;
+}
+
+/* 3. Toolbar Card & Filter Bar */
+.toolbar-card,
+.doc-table-toolbar,
+.doc-toolbar,
+.patient-toolbar,
+.toolbar,
+.meta-bar {
+  background: #111a2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4) !important;
+  padding: 16px 22px !important;
+  color: #ffffff !important;
+  margin-bottom: 20px !important;
+}
+
+/* 4. Search Bar */
+.toolbar-search,
+.doc-search-box,
+.patient-search-box,
+.search-box,
+.lookup-input-wrap {
+  background: #18243c !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 10px !important;
+  transition: all 0.2s ease !important;
+}
+
+.toolbar-search input,
+.doc-search-box input,
+.patient-search-box input,
+.search-box input,
+.lookup-input-wrap input {
+  background: transparent !important;
+  color: #ffffff !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  padding: 10px 14px !important;
+  width: 100% !important;
+}
+
+.toolbar-search input:focus,
+.doc-search-box input:focus,
+.patient-search-box input:focus,
+.search-box input:focus,
+.lookup-input-wrap input:focus {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+.toolbar-search:focus-within,
+.doc-search-box:focus-within,
+.patient-search-box:focus-within,
+.search-box:focus-within,
+.lookup-input-wrap:focus-within {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+  background: #1d2c48 !important;
+}
+
+.toolbar-search input::placeholder,
+.doc-search-box input::placeholder,
+.patient-search-box input::placeholder,
+.search-box input::placeholder,
+.lookup-input-wrap input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.search-icon,
+.toolbar-search svg,
+.doc-search-box svg,
+.patient-search-box svg {
+  color: #38bdf8 !important;
+}
+
+/* 5. All Tables & Table Cards */
+.table-card,
+.table-container,
+.doc-table-card,
+.patient-table-card,
+.table-wrapper {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  margin-bottom: 24px !important;
+}
+
+.data-table,
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  background: transparent !important;
+}
+
+.data-table th,
+table th,
+th {
+  background: #182238 !important;
+  color: #38bdf8 !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+  padding: 15px 18px !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+}
+
+.data-table td,
+table td,
+td {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  font-size: 13.5px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  padding: 14px 18px !important;
+  vertical-align: middle !important;
+}
+
+.data-table tr:hover td,
+table tr:hover td {
+  background: #1a253c !important;
+}
+
+.data-table td strong,
+.entity-cell strong,
+.entity-cell h4,
+.doc-name {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+/* 6. Universal Contact Links with Role-Specific Colors */
+.contact-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Doctor Role: Emerald (#34d399) */
+.contact-link.doctor,
+.doctor-role .contact-link,
+.doc-col .contact-link,
+.doctor-portal-container .contact-link,
+.doc-table-card .contact-link,
+.doctor-dashboard-layout .contact-link {
+  color: #34d399 !important;
+}
+.contact-link.doctor:hover,
+.doctor-role .contact-link:hover {
+  color: #6ee7b7 !important;
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.7) !important;
+  text-decoration: underline !important;
+}
+
+/* Patient Role: Bright Amber / Orange (#fb923c) */
+.contact-link.patient,
+.patient-role .contact-link,
+.patient-col .contact-link,
+.patient-portal-container .contact-link,
+.patient-table-card .contact-link,
+.patient-dashboard-layout .contact-link {
+  color: #fb923c !important;
+}
+.contact-link.patient:hover,
+.patient-role .contact-link:hover {
+  color: #fdba74 !important;
+  text-shadow: 0 0 10px rgba(251, 146, 60, 0.7) !important;
+  text-decoration: underline !important;
+}
+
+/* Hospital Admin Role: Sky Blue (#38bdf8) */
+.contact-link.hospital,
+.contact-link.admin,
+.hospital-portal-container .contact-link,
+.hospital .contact-link {
+  color: #38bdf8 !important;
+}
+.contact-link.hospital:hover,
+.contact-link.admin:hover {
+  color: #7dd3fc !important;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.7) !important;
+  text-decoration: underline !important;
+}
+
+/* 7. Title Card CSS for Login Pages */
+.title-card,
+.auth-card,
+.unified-auth-card {
+  background: #0f172a !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 35px rgba(6, 182, 212, 0.15) !important;
+  color: #ffffff !important;
+  padding: 36px 32px !important;
+  width: 100% !important;
+  max-width: 500px !important;
+  margin: 0 auto !important;
+}
+
+.title-card h2,
+.auth-card h2,
+.auth-card-top h2 {
+  color: #ffffff !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 8px !important;
+  text-align: center !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.title-card p,
+.auth-card p,
+.auth-card-top p {
+  color: #94a3b8 !important;
+  font-size: 13.5px !important;
+  line-height: 1.5 !important;
+  text-align: center !important;
+  margin-bottom: 24px !important;
+}
+
+.title-card .form-group label,
+.auth-card .form-group label {
+  color: #e2e8f0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+}
+
+.title-card input,
+.auth-card input,
+.title-card select,
+.auth-card select {
+  background: #182238 !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 10px !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  padding: 11px 14px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  outline: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.title-card input:focus,
+.auth-card input:focus,
+.title-card select:focus,
+.auth-card select:focus {
+  background: #1e2c48 !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+}
+
+.title-card input::placeholder,
+.auth-card input::placeholder {
+  color: #64748b !important;
+}
+
+/* 8. KPI Stats Grid & All Universal Cards */
+.metric-card,
+.stat-card,
+.doc-stat-card,
+.patient-stat-card,
+.lookup-hero,
+.patient-welcome-card,
+.welcome-banner {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+  color: #ffffff !important;
+}
+
+.metric-value,
+.doc-stat-card .stat-num,
+.patient-stat-card .stat-num,
+.stat-num {
+  color: #ffffff !important;
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+.metric-title,
+.doc-stat-card .stat-label,
+.patient-stat-card .stat-label,
+.stat-label {
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+.metric-badge.positive {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(52, 211, 153, 0.4) !important;
+  font-weight: 600 !important;
+}
+
+.metric-badge.neutral {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fbbf24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+  font-weight: 600 !important;
+}
+
+.metric-badge.success {
+  background: rgba(56, 189, 248, 0.2) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  font-weight: 600 !important;
+}
+
+.lookup-hero h2 {
+  color: #ffffff !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+}
+
+.lookup-hero p {
+  color: #94a3b8 !important;
+  font-size: 14px !important;
+}
+
+/* 9. Modals & Dialogs */
+.modal-content,
+.book-modal-content {
+  background: #0f172a !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7) !important;
+  color: #ffffff !important;
+}
+
+.modal-header h3,
+.book-modal-header h3 {
+  color: #ffffff !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+}
+
+.modal-header p,
+.book-modal-header p {
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+}
+
+/* 10. Universal Form Controls & Secondary Buttons */
+.form-group input,
+.form-group select,
+.filter-select-wrap select,
+.filter-select-wrap .date-filter-input {
+  background: #182238 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 10px !important;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.filter-select-wrap select:focus,
+.filter-select-wrap .date-filter-input:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+}
+
+.form-group select option,
+.filter-select-wrap select option {
+  background: #0f172a !important;
+  color: #ffffff !important;
+}
+
+.btn.secondary,
+.btn.outline {
+  background: #182238 !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+.btn.secondary:hover,
+.btn.outline:hover {
+  background: #22304d !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+}
+
+/* 11. Global Single Sign In Navigation Elements */
+.active-user-pill {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  border-radius: 20px !important;
+  padding: 4px 12px !important;
+}
+
+.role-badge-mini {
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  padding: 2px 7px !important;
+  border-radius: 10px !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+}
+.role-badge-mini.hospital, .role-badge-mini.admin {
+  background: rgba(56, 189, 248, 0.2) !important;
+  color: #38bdf8 !important;
+}
+.role-badge-mini.doctor {
+  background: rgba(52, 211, 153, 0.2) !important;
+  color: #34d399 !important;
+}
+.role-badge-mini.patient {
+  background: rgba(251, 146, 60, 0.2) !important;
+  color: #fb923c !important;
+}
+
+.user-name-mini {
+  color: #ffffff !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+}
+
+.g-logout-btn {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  border-radius: 12px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 2px 8px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+.g-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.4) !important;
+  color: #ffffff !important;
+}
+
+.auth-single-btn {
+  background: rgba(56, 189, 248, 0.12) !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  color: #38bdf8 !important;
+  font-weight: 600 !important;
+}
+.auth-single-btn:hover {
+  background: rgba(56, 189, 248, 0.25) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.4) !important;
+}
+
+
+/* ==========================================================================
+   DOCTIME MODAL CONTENT PADDING & DOCTOR 'X' CLOSE BUTTON / HORIZONTAL PADDING
+   ========================================================================== */
+
+/* 1. Modal Content Generous Padding & Refined Layout */
+.modal-content,
+.book-modal-content,
+.glass-modal-container {
+  background: #0f172a !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 30px rgba(6, 182, 212, 0.15) !important;
+  color: #ffffff !important;
+  padding: 28px 32px !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 580px !important;
+  max-height: 90vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+}
+
+.modal-content.modal-sm {
+  max-width: 440px !important;
+}
+
+.modal-header,
+.book-modal-header {
+  padding: 0 0 16px 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.modal-header h2,
+.modal-header h3,
+.book-modal-header h3 {
+  color: #ffffff !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  margin: 0 !important;
+}
+
+.modal-header p {
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+  margin-top: 4px !important;
+}
+
+.modal-body {
+  padding: 18px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+
+.modal-form {
+  padding: 16px 0 0 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.modal-footer,
+.modal-actions {
+  padding: 16px 0 0 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 14px !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
+}
+
+/* 2. Modal Close 'X' Button Padding & Styling across Doc and All Modals */
+.modal-close,
+.modal-close-btn,
+.glass-close-btn,
+.close-btn {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  padding: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 50% !important;
+  color: #cbd5e1 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  margin-left: 12px !important;
+  line-height: 1 !important;
+}
+
+.modal-close:hover,
+.modal-close-btn:hover,
+.glass-close-btn:hover,
+.close-btn:hover {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border-color: rgba(239, 68, 68, 0.5) !important;
+  color: #ffffff !important;
+  transform: scale(1.08) !important;
+}
+
+/* 3. Doctor Portal & Views Horizontal (X-Axis) Padding */
+.doctor-header {
+  padding-left: clamp(20px, 3.5vw, 48px) !important;
+  padding-right: clamp(20px, 3.5vw, 48px) !important;
+  padding-top: 18px !important;
+  padding-bottom: 18px !important;
+}
+
+.doctor-main-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-left: clamp(20px, 3.5vw, 48px) !important;
+  padding-right: clamp(20px, 3.5vw, 48px) !important;
+  padding-top: 28px !important;
+  padding-bottom: 40px !important;
+  box-sizing: border-box !important;
+}
+
+.doctor-welcome-card {
+  padding-left: clamp(20px, 2.5vw, 36px) !important;
+  padding-right: clamp(20px, 2.5vw, 36px) !important;
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+  margin-bottom: 24px !important;
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 16px !important;
+}
+
+.doctor-stats-grid {
+  gap: 20px !important;
+  margin-bottom: 28px !important;
+}
+
+.doc-stat-card {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+  border-radius: 14px !important;
+}
+
+.doc-table-card {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  margin-bottom: 30px !important;
+}
+
+.doc-table-toolbar {
+  padding-left: clamp(18px, 2vw, 32px) !important;
+  padding-right: clamp(18px, 2vw, 32px) !important;
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
+}
+
+.doc-search-box {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  border-radius: 10px !important;
+}
+
+.doc-filter-btn {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  border-radius: 8px !important;
+}
+
+.doctor-table th,
+.doc-table-card table th,
+.doctor-dashboard-layout table th {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+}
+
+.doctor-table td,
+.doc-table-card table td,
+.doctor-dashboard-layout table td {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+}
+
+.action-btn-custom {
+  padding-left: 12px !important;
+  padding-right: 14px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  border-radius: 8px !important;
+}
+
+
+/* ==========================================================================
+   USER ENHANCEMENTS:
+   1. Brand Highlight: DocTime Healthcare Vibrant Gradient Glow
+   2. Global Portal Bar: Login and Sign Up Only
+   3. Platform Details Section & Architecture
+   4. Universal Generous Table Padding Across All Portals
+   5. Title Shape Card Geometry (Login, Registration, Modals)
+   6. 3D Flip Doctor Cards in Patient Portal (Hover reveals back details)
+   ========================================================================== */
+
+/* 1. DocTime Healthcare Vibrant Gradient Glow */
+.hub-app-name,
+.doctime-healthcare-title,
+.dashboard-brand-row .hub-app-name {
+  font-size: clamp(1.2rem, 2.6vw, 1.85rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 35%, #00f5a0 70%, #38bdf8 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  filter: drop-shadow(0 0 16px rgba(0, 242, 254, 0.5)) !important;
+}
+
+.dashboard-brand-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-bottom: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.platform-tag {
+  background: rgba(6, 182, 212, 0.18) !important;
+  border: 1px solid rgba(6, 182, 212, 0.45) !important;
+  color: #38bdf8 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  padding: 4px 10px !important;
+  border-radius: 9999px !important;
+}
+
+/* 2. Global Portal Bar Buttons (Login & Sign Up Only) */
+.global-auth-buttons {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.g-nav-btn.login-btn {
+  background: rgba(56, 189, 248, 0.12) !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 8px 18px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.2) !important;
+  transition: all 0.25s ease !important;
+}
+
+.g-nav-btn.login-btn:hover {
+  background: rgba(56, 189, 248, 0.28) !important;
+  border-color: #38bdf8 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.45) !important;
+}
+
+.g-nav-btn.signup-btn {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+  border: 1px solid rgba(52, 211, 153, 0.6) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  padding: 8px 20px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+  transition: all 0.25s ease !important;
+}
+
+.g-nav-btn.signup-btn:hover {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%) !important;
+  border-color: #6ee7b7 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.55) !important;
+}
+
+.g-nav-btn.my-portal-btn {
+  background: rgba(6, 182, 212, 0.18) !important;
+  border: 1px solid rgba(6, 182, 212, 0.5) !important;
+  color: #38bdf8 !important;
+  font-weight: 600 !important;
+  padding: 6px 14px !important;
+  border-radius: 8px !important;
+}
+
+/* 3. Title Shape Card Geometry */
+.title-shape-card {
+  position: relative !important;
+  background: #0d1527 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 4px solid #06b6d4 !important;
+  border-radius: 18px !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55), 0 0 24px rgba(6, 182, 212, 0.12) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.title-shape-card::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, #06b6d4, #10b981, #38bdf8) !important;
+  z-index: 2 !important;
+}
+
+.auth-card.title-shape-card,
+.unified-auth-card.title-shape-card,
+.title-card {
+  max-width: 520px !important;
+  margin: 0 auto !important;
+  padding: 36px 36px !important;
+}
+
+/* 4. Universal Generous Table Padding */
+.table-responsive,
+.data-table-wrap,
+.table-container,
+.table-wrapper,
+.doc-table-card .table-responsive,
+.patient-table-card .table-responsive {
+  padding: 12px 18px 24px 18px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.data-table,
+.doctor-table,
+.patient-table,
+table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 4px !important;
+}
+
+.data-table th,
+.doctor-table th,
+.patient-table th,
+.doc-table-card table th,
+.patient-table-card table th,
+table th,
+th {
+  background: #182238 !important;
+  color: #38bdf8 !important;
+  font-weight: 700 !important;
+  font-size: 12.5px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  padding: 18px 22px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 2px solid rgba(56, 189, 248, 0.3) !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+}
+
+.data-table td,
+.doctor-table td,
+.patient-table td,
+.doc-table-card table td,
+.patient-table-card table td,
+table td,
+td {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  font-size: 14px !important;
+  padding: 18px 22px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  vertical-align: middle !important;
+  line-height: 1.6 !important;
+}
+
+.data-table tr:hover td,
+.doctor-table tr:hover td,
+.patient-table tr:hover td,
+table tr:hover td {
+  background: #1a253c !important;
+}
+
+/* 5. 3D Flip Doctor Cards in Patient Portal */
+.patient-doctors-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+  gap: 24px !important;
+  width: 100% !important;
+  margin-top: 20px !important;
+}
+
+.doc-flip-card {
+  background: transparent !important;
+  perspective: 1200px !important;
+  height: 390px !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.doc-flip-inner {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform-style: preserve-3d !important;
+}
+
+.doc-flip-card:hover .doc-flip-inner {
+  transform: rotateY(180deg) !important;
+}
+
+.doc-flip-front,
+.doc-flip-back {
+  position: absolute !important;
+  width: 100% !important;
+  height: 100% !important;
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+  border-radius: 18px !important;
+  padding: 24px 22px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+/* Front Side: Hospital and Doctor Name */
+.doc-flip-front {
+  background: #0d1527 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 4px solid #10b981 !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+.doc-front-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+.doc-hosp-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: rgba(37, 99, 235, 0.18) !important;
+  border: 1px solid rgba(37, 99, 235, 0.4) !important;
+  color: #60a5fa !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 4px 10px !important;
+  border-radius: 9999px !important;
+}
+
+.doc-verified-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  background: rgba(16, 185, 129, 0.18) !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  color: #34d399 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+  border-radius: 9999px !important;
+}
+
+.doc-front-body {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  padding: 14px 0 !important;
+}
+
+.doc-front-avatar {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+  color: #ffffff !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4) !important;
+  margin-bottom: 12px !important;
+}
+
+.doc-front-name {
+  color: #ffffff !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  margin-bottom: 4px !important;
+}
+
+.doc-front-spec {
+  color: #38bdf8 !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  margin-bottom: 8px !important;
+}
+
+.doc-front-dept {
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  margin-bottom: 6px !important;
+}
+
+.doc-front-location {
+  color: #64748b !important;
+  font-size: 11px !important;
+}
+
+.doc-front-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding-top: 12px !important;
+  text-align: center !important;
+}
+
+.flip-hint-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: #34d399 !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+}
+
+/* Back Side: Full Details & Booking */
+.doc-flip-back {
+  background: #0f1a30 !important;
+  border: 1px solid rgba(52, 211, 153, 0.35) !important;
+  border-top: 4px solid #38bdf8 !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6) !important;
+  transform: rotateY(180deg) !important;
+}
+
+.doc-back-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding-bottom: 10px !important;
+}
+
+.doc-back-name {
+  color: #ffffff !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+}
+
+.doc-back-spec {
+  color: #38bdf8 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+.doc-back-status-chip {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+  border-radius: 9999px !important;
+}
+
+.doc-back-specs-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px 12px !important;
+  margin: 12px 0 !important;
+}
+
+.doc-spec-item {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.doc-spec-item.full {
+  grid-column: span 2 !important;
+}
+
+.spec-label {
+  color: #64748b !important;
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.spec-value {
+  color: #e2e8f0 !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+}
+
+.spec-value.highlight {
+  color: #38bdf8 !important;
+}
+
+.spec-value.fee {
+  color: #34d399 !important;
+}
+
+.spec-value.email,
+.spec-value.phone {
+  word-break: break-all !important;
+}
+
+.doc-back-book-btn {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+  border: 1px solid rgba(52, 211, 153, 0.5) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 13.5px !important;
+  padding: 10px 16px !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
+}
+
+.doc-back-book-btn:hover {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6) !important;
+}
+
+/* 6. Hub Platform Details Section */
+.hub-details-section {
+  margin-top: 50px !important;
+  padding: 30px clamp(16px, 3vw, 40px) 40px clamp(16px, 3vw, 40px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.hub-details-header {
+  text-align: center !important;
+  margin-bottom: 32px !important;
+}
+
+.hub-details-pill {
+  display: inline-block !important;
+  background: rgba(6, 182, 212, 0.15) !important;
+  border: 1px solid rgba(6, 182, 212, 0.4) !important;
+  color: #38bdf8 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  padding: 4px 12px !important;
+  border-radius: 9999px !important;
+  margin-bottom: 8px !important;
+}
+
+.hub-details-header h2 {
+  color: #ffffff !important;
+  font-size: clamp(20px, 2.5vw, 28px) !important;
+  font-weight: 800 !important;
+  margin-bottom: 8px !important;
+}
+
+.hub-details-header p {
+  color: #94a3b8 !important;
+  font-size: 14px !important;
+  max-width: 650px !important;
+  margin: 0 auto !important;
+}
+
+.hub-features-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+  gap: 20px !important;
+  width: 100% !important;
+}
+
+.hub-feature-card {
+  padding: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.hub-feature-card h3 {
+  color: #ffffff !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  margin: 12px 0 6px 0 !important;
+}
+
+.hub-feature-card p {
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  margin-bottom: 14px !important;
+}
+
+.feature-icon-box {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.feature-icon-box.cyan {
+  background: rgba(6, 182, 212, 0.2) !important;
+  color: #06b6d4 !important;
+}
+
+.feature-icon-box.emerald {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #10b981 !important;
+}
+
+.feature-icon-box.blue {
+  background: rgba(37, 99, 235, 0.2) !important;
+  color: #3b82f6 !important;
+}
+
+.feature-icon-box.amber {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #f59e0b !important;
+}
+
+.feature-tech-badge {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+
+/* ==========================================================================
+   EXHAUSTIVE USER DESIGN REFINEMENTS:
+   - Universal Dark Glass on All Tables, Toolbars, and Stat Cards
+   - Header Top Bar High Contrast & Cohesive Styling
+   - Ample Modal Content and 'X' Button Padding
+   - High Contrast Search Bar with Focus Glow
+   - Title Shape Card Geometry for Login, Registration & Section Headers
+   - 3D Flip Card Hover Experience in Patient Portal
+   ========================================================================== */
+
+/* 1. Header Top Bar */
+.topbar,
+.doctor-header,
+.patient-header,
+.global-portal-bar {
+  background: #090e1a !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5) !important;
+  color: #ffffff !important;
+}
+
+.topbar .eyebrow {
+  color: #06b6d4 !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 0 12px rgba(6, 182, 212, 0.4) !important;
+}
+
+.topbar h1,
+.doc-brand h3,
+.patient-brand h3 {
+  color: #ffffff !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  margin: 4px 0 !important;
+}
+
+.topbar-subtitle,
+.doctor-header p,
+.patient-header p {
+  color: #94a3b8 !important;
+  font-size: 13.5px !important;
+  margin: 0 !important;
+}
+
+/* 2. Toolbar & Search Bar Color */
+.toolbar-card,
+.doc-table-toolbar,
+.patient-toolbar,
+.toolbar {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 16px !important;
+  padding: 18px 24px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45) !important;
+  color: #ffffff !important;
+  margin-bottom: 22px !important;
+}
+
+.toolbar-search,
+.doc-search-box,
+.patient-search-box,
+.search-box,
+.lookup-input-wrap {
+  background: #18243c !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 12px !important;
+  padding: 4px 14px !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: all 0.25s ease !important;
+}
+
+.toolbar-search input,
+.doc-search-box input,
+.patient-search-box input,
+.search-box input,
+.lookup-input-wrap input {
+  background: transparent !important;
+  color: #ffffff !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 8px 10px !important;
+  width: 100% !important;
+}
+
+.toolbar-search input::placeholder,
+.doc-search-box input::placeholder,
+.patient-search-box input::placeholder,
+.search-box input::placeholder,
+.lookup-input-wrap input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.toolbar-search:focus-within,
+.doc-search-box:focus-within,
+.patient-search-box:focus-within,
+.search-box:focus-within,
+.lookup-input-wrap:focus-within {
+  background: #1e2d4a !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.toolbar-search svg,
+.doc-search-box svg,
+.patient-search-box svg,
+.search-box svg {
+  color: #38bdf8 !important;
+  flex-shrink: 0 !important;
+}
+
+.filter-select-wrap select,
+.doc-filter-btn,
+.patient-nav-tab {
+  background: #18243c !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+  padding: 9px 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.filter-select-wrap select:focus,
+.doc-filter-btn.active,
+.patient-nav-tab.active {
+  border-color: #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.22) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.3) !important;
+}
+
+/* 3. Universal Generous Table Padding & Dark Glass Theme */
+.data-card,
+.doc-table-card,
+.patient-table-card,
+.table-container,
+.table-wrapper {
+  background: #0b1120 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55) !important;
+  overflow: hidden !important;
+  margin-top: 10px !important;
+}
+
+.table-responsive {
+  padding: 16px 22px 26px 22px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: auto !important;
+}
+
+.data-table,
+.doctor-table,
+.patient-table,
+table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 6px !important;
+}
+
+.data-table th,
+.doctor-table th,
+.patient-table th,
+th {
+  background: #182238 !important;
+  color: #38bdf8 !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.8px !important;
+  text-transform: uppercase !important;
+  padding: 18px 22px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 2px solid rgba(56, 189, 248, 0.35) !important;
+  text-align: left !important;
+}
+
+.data-table td,
+.doctor-table td,
+.patient-table td,
+td {
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  font-size: 14px !important;
+  padding: 18px 22px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.04) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  vertical-align: middle !important;
+}
+
+.data-table tr:hover td,
+.doctor-table tr:hover td,
+.patient-table tr:hover td,
+table tr:hover td {
+  background: #1a253c !important;
+  color: #ffffff !important;
+}
+
+/* 4. Stat & KPI Cards (No Glaring White) */
+.metric-card,
+.doc-stat-card,
+.patient-stat-card,
+.dashboard-card,
+.doctor-welcome-card,
+.patient-welcome-card,
+.lookup-hero {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45) !important;
+  color: #ffffff !important;
+}
+
+.metric-card:hover,
+.doc-stat-card:hover {
+  border-color: rgba(56, 189, 248, 0.45) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(6, 182, 212, 0.2) !important;
+}
+
+.metric-value,
+.doc-stat-card .stat-num,
+.patient-stat-card .stat-num,
+.stat-num {
+  color: #ffffff !important;
+  font-size: 32px !important;
+  font-weight: 800 !important;
+}
+
+.metric-title,
+.stat-label {
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+.doc-welcome-text h2,
+.patient-welcome-text h2,
+.lookup-hero h2 {
+  color: #ffffff !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+}
+
+.doc-welcome-text p,
+.patient-welcome-text p,
+.lookup-hero p {
+  color: #cbd5e1 !important;
+  font-size: 13.5px !important;
+}
+
+/* 5. Title Cards & Auth Card Geometry */
+.auth-card,
+.doctor-card,
+.hospital-card,
+.title-card,
+.title-shape-card {
+  background: #0d1527 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 4px solid #06b6d4 !important;
+  border-radius: 20px !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(6, 182, 212, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* 6. Modal Content & Close 'X' Padding */
+.modal-content,
+.book-modal-content {
+  padding: 32px 36px !important;
+  background: #0f172a !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 32px rgba(6, 182, 212, 0.18) !important;
+}
+
+.modal-close,
+.modal-close-btn,
+.glass-close-btn,
+.close-btn {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  padding: 9px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 50% !important;
+  color: #cbd5e1 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.modal-close:hover,
+.modal-close-btn:hover,
+.glass-close-btn:hover,
+.close-btn:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  border-color: rgba(239, 68, 68, 0.6) !important;
+  color: #ffffff !important;
+  transform: scale(1.08) !important;
+}
+
+/* Doctor Main Content Horizontal Padding */
+.doctor-main-content {
+  padding-left: clamp(24px, 4vw, 56px) !important;
+  padding-right: clamp(24px, 4vw, 56px) !important;
+  padding-top: 30px !important;
+  padding-bottom: 45px !important;
+}
+
+.doctor-header {
+  padding-left: clamp(24px, 4vw, 56px) !important;
+  padding-right: clamp(24px, 4vw, 56px) !important;
+}
+
+
+/* ==========================================================================
+   USER REQUESTED PADDING REFINEMENTS:
+   1. Patient Table Card Generous Padding
+   2. Glass-Card Reports Panel Generous Padding & Structured Inner Layout
+   ========================================================================== */
+
+/* 1. Patient Table Card */
+.patient-table-card {
+  padding: 28px 32px !important;
+  box-sizing: border-box !important;
+  background: #0b1120 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55) !important;
+  margin-top: 14px !important;
+}
+
+.patient-table-card .patient-card-header {
+  padding: 0 0 20px 0 !important;
+  margin-bottom: 18px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.patient-table-card .patient-card-header h3 {
+  color: #ffffff !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+}
+
+.patient-table-card .table-responsive {
+  padding: 12px 0 0 0 !important;
+}
+
+/* 2. Glass-Card Reports Panel */
+.glass-card.reports-panel,
+.reports-panel {
+  padding: 32px 36px !important;
+  box-sizing: border-box !important;
+  background: #0d1527 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6) !important;
+}
+
+.reports-panel .glass-card-header {
+  padding-bottom: 22px !important;
+  margin-bottom: 24px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.reports-panel .reports-layout-grid {
+  gap: 26px !important;
+}
+
+.reports-panel .upload-box,
+.reports-panel .glass-panel {
+  padding: 26px 30px !important;
+  border-radius: 16px !important;
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35) !important;
+}

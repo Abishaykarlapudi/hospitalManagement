@@ -5,10 +5,12 @@ import DoctorPortal from "./components/DoctorPortal";
 import PatientPortal from "./components/PatientPortal";
 import Toast from "./components/Toast";
 import AiAssistantModal from "./components/AiAssistantModal";
+import UnifiedAuthModal from "./components/UnifiedAuthModal";
+import authService from "./services/authService";
 import doctorService from "./services/doctorService";
 import patientService from "./services/patientService";
 import appointmentService from "./services/appointmentService";
-import { Building2, Stethoscope, User, LayoutGrid, Bot, Sparkles } from "lucide-react";
+import { Building2, Stethoscope, User, LayoutGrid, Bot, Sparkles, ShieldCheck, KeyRound, LogIn, UserPlus } from "lucide-react";
 import SpecularButton from "./components/SpecularButton";
 import "./App.css";
 import "./glass.css";
@@ -51,9 +53,30 @@ export function App() {
   // Floating AI Modal State
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
 
+  // Unified Single Auth Modal State (All Roles & Brevo Verification)
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState("login");
+  const [authModalRole, setAuthModalRole] = useState("PATIENT");
+  const [activeSession, setActiveSession] = useState(() => authService.getActiveSession());
+
   // Show Toast Helper
   const showToast = useCallback((type, message) => {
     setToast({ type, message });
+  }, []);
+
+  // Universal Logout Handler
+  const handleLogout = useCallback(() => {
+    authService.logoutAll();
+    setActiveSession(null);
+    showToast("info", "Signed out successfully.");
+    handleNavigatePortal("hub");
+  }, [showToast]);
+
+  // Open Unified Auth Modal with targeted role and mode
+  const handleOpenAuthModal = useCallback((role = "PATIENT", mode = "login") => {
+    setAuthModalRole(role);
+    setAuthModalMode(mode);
+    setIsAuthModalOpen(true);
   }, []);
 
   // Fetch all hospital master data
@@ -115,57 +138,46 @@ export function App() {
       {/* Toast Notification Container */}
       <Toast toast={toast} onClose={() => setToast(null)} />
 
-      {/* Floating Global Portal Switcher (Quick Nav) */}
-      <nav className="global-portal-bar">
-        <div className="global-brand" onClick={() => handleNavigatePortal("hub")}>
-          <span className="dot active"></span>
-          <strong>DocTime</strong>
-          <small>AI-Powered Healthcare</small>
-        </div>
+      {/* Floating Global Portal Switcher (Quick Nav) - Completely Hidden After Login */}
+      {!activeSession && (
+        <nav className="global-portal-bar">
+          <div className="global-brand" onClick={() => handleNavigatePortal("hub")}>
+            <span className="dot active"></span>
+            <strong>DocTime</strong>
+            <small>AI-Powered Healthcare</small>
+          </div>
 
-        <div className="global-nav-links">
-          <button
-            className={`g-nav-btn ${currentPortal === "hub" ? "active" : ""}`}
-            onClick={() => handleNavigatePortal("hub")}
-            title="Gateway Hub (/)"
-          >
-            <LayoutGrid size={15} />
-            <span>Portal Gateway</span>
-          </button>
-          <button
-            className={`g-nav-btn hospital ${currentPortal === "hospital" ? "active" : ""}`}
-            onClick={() => handleNavigatePortal("hospital")}
-            title="Hospital Admin Portal (/hospital)"
-          >
-            <Building2 size={15} />
-            <span>Hospital Admin</span>
-            <span className="port-tag">5173</span>
-          </button>
-          <button
-            className={`g-nav-btn doctor ${currentPortal === "doctor" ? "active" : ""}`}
-            onClick={() => handleNavigatePortal("doctor")}
-            title="Doctor Portal (/doctor)"
-          >
-            <Stethoscope size={15} />
-            <span>Doctor</span>
-            <span className="port-tag">5174</span>
-          </button>
-          <button
-            className={`g-nav-btn patient ${currentPortal === "patient" ? "active" : ""}`}
-            onClick={() => handleNavigatePortal("patient")}
-            title="Patient Portal (/patient)"
-          >
-            <User size={15} />
-            <span>Patient / User</span>
-            <span className="port-tag">5175</span>
-          </button>
-        </div>
-      </nav>
+          <div className="global-nav-links">
+            <div className="global-auth-buttons">
+              <button
+                className="g-nav-btn login-btn"
+                onClick={() => handleOpenAuthModal("PATIENT", "login")}
+                title="Sign In to DocTime"
+              >
+                <LogIn size={15} color="#38bdf8" />
+                <span>Login</span>
+              </button>
+              <button
+                className="g-nav-btn signup-btn"
+                onClick={() => handleOpenAuthModal("PATIENT", "register")}
+                title="Create a New Account"
+              >
+                <UserPlus size={15} color="#34d399" />
+                <span>Sign Up</span>
+              </button>
+            </div>
+          </div>
+        </nav>
+      )}
 
       {/* Dynamic Portal View */}
       <div className="portal-page-view">
         {currentPortal === "hub" && (
-          <PortalHub onNavigate={handleNavigatePortal} />
+          <PortalHub
+            onNavigate={handleNavigatePortal}
+            onOpenAuthModal={handleOpenAuthModal}
+            activeSession={activeSession}
+          />
         )}
 
         {currentPortal === "hospital" && (
@@ -178,6 +190,9 @@ export function App() {
             onRefresh={() => loadAllData(false)}
             showToast={showToast}
             onBackToHub={() => handleNavigatePortal("hub")}
+            activeSession={activeSession}
+            onOpenAuthModal={handleOpenAuthModal}
+            onLogout={handleLogout}
           />
         )}
 
@@ -185,13 +200,22 @@ export function App() {
           <DoctorPortal
             onBackToHub={() => handleNavigatePortal("hub")}
             showToast={showToast}
+            activeSession={activeSession}
+            onOpenAuthModal={handleOpenAuthModal}
+            onLogout={handleLogout}
           />
         )}
 
         {currentPortal === "patient" && (
           <PatientPortal
-            onBackToHub={() => handleNavigatePortal("hub")}
+            doctors={doctors}
+            appointments={appointments}
+            onRefresh={() => loadAllData(false)}
             showToast={showToast}
+            onBackToHub={() => handleNavigatePortal("hub")}
+            activeSession={activeSession}
+            onOpenAuthModal={handleOpenAuthModal}
+            onLogout={handleLogout}
           />
         )}
       </div>
@@ -216,6 +240,23 @@ export function App() {
           <Sparkles size={14} />
         </SpecularButton>
       </div>
+
+      {/* Unified Single Authentication & Brevo Verification Modal */}
+      <UnifiedAuthModal
+        isOpen={isAuthModalOpen}
+        initialMode={authModalMode}
+        initialRole={authModalRole}
+        onClose={() => setIsAuthModalOpen(false)}
+        showToast={showToast}
+        onSuccess={(session) => {
+          setActiveSession(session);
+          setIsAuthModalOpen(false);
+          if (session.redirectPortal) {
+            const targetPortal = session.redirectPortal.replace("/", "");
+            handleNavigatePortal(targetPortal);
+          }
+        }}
+      />
 
       {/* AI Assistant Dialog Component */}
       <AiAssistantModal

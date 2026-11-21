@@ -297,7 +297,7 @@ export function PatientManagement({
                       <td>
                         <a
                           href={`mailto:${p.pa_email}`}
-                          className="contact-link"
+                          className="contact-link patient"
                         >
                           <Mail size={13} /> {p.pa_email}
                         </a>

@@ -35,12 +35,12 @@ public class DoctorController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
 
-	@GetMapping({"/alldoctors", "/all"})
+	@GetMapping({"/alldoctors", "/all", "/getalldoctors", "/getdoctors", "/allDoctors"})
 	public ResponseEntity<List<Doctor>> getAllDoctors() {
 		return ResponseEntity.ok(doctorService.getAllDoctor());
 	}
 
-	@GetMapping({"/docbyid/{id}", "/{id}"})
+	@GetMapping({"/docbyid/{id}", "/{id:[0-9]+}"})
 	public ResponseEntity<Doctor> getDocById(@PathVariable Integer id) {
 		return ResponseEntity.ok(doctorService.getDoctorById(id));
 	}

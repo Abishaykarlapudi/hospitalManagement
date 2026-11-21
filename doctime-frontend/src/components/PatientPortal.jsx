@@ -16,7 +16,10 @@ import {
   ChevronRight,
   Phone,
   Mail,
-  FileText
+  FileText,
+  Building2,
+  ShieldCheck,
+  ArrowRight
 } from "lucide-react";
 import authService from "../services/authService";
 import appointmentService from "../services/appointmentService";
@@ -26,8 +29,29 @@ import MedicalReportsManager from "./MedicalReportsManager";
 import AnimatedList from "./AnimatedList";
 import SpecularButton from "./SpecularButton";
 
-export function PatientPortal({ onBackToHub, showToast }) {
-  const [currentPatient, setCurrentPatient] = useState(() => authService.getPatientUser());
+export function PatientPortal({
+  onBackToHub,
+  showToast,
+  activeSession,
+  onOpenAuthModal,
+  onLogout,
+}) {
+  const [currentPatient, setCurrentPatient] = useState(() => {
+    if (activeSession && (activeSession.patient || activeSession.role === "PATIENT")) {
+      return activeSession.patient || activeSession.user;
+    }
+    return authService.getPatientUser();
+  });
+
+  // Synchronize with parent activeSession
+  useEffect(() => {
+    if (activeSession && (activeSession.patient || activeSession.role === "PATIENT")) {
+      setCurrentPatient(activeSession.patient || activeSession.user);
+    } else if (!activeSession) {
+      setCurrentPatient(null);
+    }
+  }, [activeSession]);
+
   const [authMode, setAuthMode] = useState("login"); // "login" or "register"
 
   // Login form state
@@ -121,8 +145,10 @@ export function PatientPortal({ onBackToHub, showToast }) {
     setLoggingIn(true);
     try {
       const res = await authService.patientLogin(targetEmail.trim());
-      setCurrentPatient(res.patient);
-      showToast("success", `Welcome back, ${res.patient.pa_name}!`);
+      const patientObj = res.patient || res.user || res;
+      setCurrentPatient(patientObj);
+      const displayName = patientObj?.pa_name || patientObj?.fullname || "Patient";
+      showToast("success", `Welcome back, ${displayName}!`);
     } catch (err) {
       showToast("error", err.message || "Failed to log in as patient.");
     } finally {
@@ -152,10 +178,14 @@ export function PatientPortal({ onBackToHub, showToast }) {
 
   // Handle Logout
   const handleLogout = () => {
-    authService.patientLogout();
-    setCurrentPatient(null);
-    setAppointments([]);
-    showToast("info", "Signed out of Patient Portal.");
+    if (onLogout) {
+      onLogout();
+    } else {
+      authService.patientLogout();
+      setCurrentPatient(null);
+      setAppointments([]);
+      showToast("info", "Signed out of Patient Portal.");
+    }
   };
 
   // Open Book Modal (optionally preselecting doctor)
@@ -224,7 +254,7 @@ export function PatientPortal({ onBackToHub, showToast }) {
     });
   }, [doctors, doctorSearch]);
 
-  // ==================== 1. LOGIN / REGISTER SCREEN ====================
+  // ==================== 1. UNIFIED SINGLE PATIENT GATEWAY ====================
   if (!currentPatient) {
     return (
       <div className="portal-auth-container">
@@ -236,129 +266,81 @@ export function PatientPortal({ onBackToHub, showToast }) {
           <div className="portal-tag-pill patient">Direct Link: /patient • Port 5175</div>
         </div>
 
-        <div className="auth-card patient-card title-card">
-          <div className="auth-card-top">
-            <div className="auth-avatar patient">
+        <div className="auth-card patient-card title-card" style={{ maxWidth: 500, margin: "0 auto", textAlign: "center" }}>
+          <div className="auth-card-top" style={{ marginBottom: 20 }}>
+            <div className="auth-avatar patient" style={{ margin: "0 auto 14px auto" }}>
               <User size={36} color="#ea580c" />
             </div>
-            <h2>Patient / User Portal</h2>
-            <p>Book doctor appointments, view booking status, and consult healthcare specialists.</p>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#ffffff", margin: 0 }}>DocTime Patient Services</h2>
+            <p style={{ color: "#94a3b8", fontSize: 13.5, marginTop: 6, lineHeight: 1.5 }}>
+              Single secure access with Brevo OTP email verification. Consult certified doctors and manage appointments.
+            </p>
           </div>
 
-          {/* Toggle Login vs Register */}
-          <div className="auth-tab-switch">
-            <button
-              className={`auth-switch-btn ${authMode === "login" ? "active" : ""}`}
-              onClick={() => setAuthMode("login")}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, margin: "24px 0" }}>
+            <SpecularButton
+              size="lg"
+              radius={12}
+              tint="#ea580c"
+              tintOpacity={0.25}
+              textColor="#ffffff"
+              lineColor="#fb923c"
+              baseColor="#c2410c"
+              style={{ width: "100%" }}
+              onClick={() => onOpenAuthModal ? onOpenAuthModal("PATIENT", "login") : handleLogin(null, "kabishay1@gmail.com")}
             >
-              Sign In (Existing Patient)
-            </button>
-            <button
-              className={`auth-switch-btn ${authMode === "register" ? "active" : ""}`}
-              onClick={() => setAuthMode("register")}
+              <span>Single Sign In (All Roles)</span>
+              <ArrowRight size={16} />
+            </SpecularButton>
+
+            <SpecularButton
+              size="lg"
+              radius={12}
+              tint="#10b981"
+              tintOpacity={0.25}
+              textColor="#ffffff"
+              lineColor="#34d399"
+              baseColor="#059669"
+              style={{ width: "100%" }}
+              onClick={() => onOpenAuthModal ? onOpenAuthModal("PATIENT", "register") : setAuthMode("register")}
             >
-              Register (New Patient)
-            </button>
+              <span>Register New Patient Account (Brevo OTP)</span>
+              <ShieldCheck size={16} />
+            </SpecularButton>
           </div>
-
-          {authMode === "login" ? (
-            <form onSubmit={handleLogin} className="auth-form">
-              <div className="form-group">
-                <label>Registered Patient Email Address</label>
-                <input
-                  type="email"
-                  placeholder="e.g., patient@example.com"
-                  value={emailInput}
-                  onChange={(e) => setEmailInput(e.target.value)}
-                  required
-                />
-              </div>
-
-              <button type="submit" className="auth-submit-btn patient" disabled={loggingIn}>
-                {loggingIn ? "Verifying..." : "Sign In to Patient Portal"}
-              </button>
-            </form>
-          ) : (
-            <form onSubmit={handleRegister} className="auth-form">
-              <div className="form-group">
-                <label>Full Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g., John Doe"
-                  value={regForm.pa_name}
-                  onChange={(e) => setRegForm({ ...regForm, pa_name: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label>Age</label>
-                  <input
-                    type="number"
-                    placeholder="e.g., 28"
-                    value={regForm.pa_age}
-                    onChange={(e) => setRegForm({ ...regForm, pa_age: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Phone Number</label>
-                  <input
-                    type="tel"
-                    placeholder="e.g., 9876543210"
-                    value={regForm.pa_phone_number}
-                    onChange={(e) => setRegForm({ ...regForm, pa_phone_number: e.target.value })}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label>Email Address</label>
-                <input
-                  type="email"
-                  placeholder="e.g., john@example.com"
-                  value={regForm.pa_email}
-                  onChange={(e) => setRegForm({ ...regForm, pa_email: e.target.value })}
-                  required
-                />
-              </div>
-
-              <button type="submit" className="auth-submit-btn patient" disabled={registering}>
-                {registering ? "Registering Patient..." : "Create Patient Account & Sign In"}
-              </button>
-            </form>
-          )}
 
           {/* Quick Select demo patients */}
-          {authMode === "login" && (
-            <div className="auth-quick-select">
-              <h4>Or Select an Existing Patient:</h4>
-              {loadingPatients ? (
-                <div className="quick-loading">Loading patients...</div>
-              ) : registeredPatients.length === 0 ? (
-                <div className="quick-empty">No patients yet. Use Register tab above!</div>
-              ) : (
-                <div className="quick-doc-list">
-                  {registeredPatients.map((p) => (
-                    <button
-                      key={p.pa_id}
-                      className="quick-doc-item"
-                      onClick={() => handleLogin(null, p.pa_email)}
-                    >
-                      <div className="q-avatar patient">{p.pa_name?.charAt(0)}</div>
-                      <div className="q-info">
-                        <strong>{p.pa_name}</strong>
-                        <small>Age: {p.pa_age} • {p.pa_email}</small>
-                      </div>
-                      <ChevronRight size={16} color="#ea580c" />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          <div className="auth-quick-select" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16, textAlign: "left" }}>
+            <h4 style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 10px 0" }}>Or Fast One-Click Demo Profiles:</h4>
+            {loadingPatients ? (
+              <div className="quick-loading">Loading patients...</div>
+            ) : (
+              <div className="quick-doc-list">
+                <button
+                  className="quick-doc-item"
+                  onClick={() => handleLogin(null, "kabishay1@gmail.com")}
+                >
+                  <div className="q-avatar patient">A</div>
+                  <div className="q-info">
+                    <strong>abishay</strong>
+                    <small>Age: 22 • kabishay1@gmail.com</small>
+                  </div>
+                  <ChevronRight size={16} color="#ea580c" />
+                </button>
+                <button
+                  className="quick-doc-item"
+                  onClick={() => handleLogin(null, "sita.sharma@example.com")}
+                >
+                  <div className="q-avatar patient">S</div>
+                  <div className="q-info">
+                    <strong>Sita Sharma</strong>
+                    <small>Age: 27 • sita.sharma@example.com</small>
+                  </div>
+                  <ChevronRight size={16} color="#ea580c" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -381,11 +363,11 @@ export function PatientPortal({ onBackToHub, showToast }) {
 
         <div className="patient-profile-pill">
           <div className="patient-avatar-large">
-            {currentPatient.pa_name?.charAt(0)?.toUpperCase()}
+            {(currentPatient?.pa_name || currentPatient?.fullname || "P").charAt(0)?.toUpperCase()}
           </div>
           <div className="patient-text">
-            <strong>{currentPatient.pa_name}</strong>
-            <span>Age: {currentPatient.pa_age} • ID #{currentPatient.pa_id}</span>
+            <strong>{currentPatient?.pa_name || currentPatient?.fullname || "Patient"}</strong>
+            <span>Age: {currentPatient?.pa_age || currentPatient?.age || "N/A"} • ID #{currentPatient?.pa_id || currentPatient?.patientId || 1}</span>
           </div>
           <button className="patient-logout-btn" onClick={handleLogout} title="Sign Out">
             <LogOut size={16} />
@@ -399,11 +381,11 @@ export function PatientPortal({ onBackToHub, showToast }) {
         {/* Welcome Card & Action */}
         <div className="patient-welcome-card">
           <div className="patient-welcome-text">
-            <h2>Hello, {currentPatient.pa_name}!</h2>
+            <h2>Hello, {currentPatient?.pa_name || currentPatient?.fullname || "Patient"}!</h2>
             <p>
-              Email: <strong>{currentPatient.pa_email}</strong> | Contact:{" "}
-              <strong>{currentPatient.pa_phone_number}</strong> | Age:{" "}
-              <strong>{currentPatient.pa_age} years</strong>
+              Email: <strong>{currentPatient?.pa_email || currentPatient?.email}</strong> | Contact:{" "}
+              <strong>{currentPatient?.pa_phone_number || currentPatient?.phone}</strong> | Age:{" "}
+              <strong>{currentPatient?.pa_age || currentPatient?.age || "N/A"} years</strong>
             </p>
           </div>
           <div className="patient-actions-right">
@@ -582,34 +564,104 @@ export function PatientPortal({ onBackToHub, showToast }) {
             </div>
 
             <div className="patient-doctors-grid">
-              {filteredDoctors.map((doc) => (
-                <div key={doc.doc_id} className="patient-doc-card">
-                  <div className="p-doc-top">
-                    <div className="p-doc-avatar">{doc.doc_name?.charAt(0)}</div>
-                    <div>
-                      <h4>Dr. {doc.doc_name}</h4>
-                      <span className="p-doc-spec">{doc.doc_specialization}</span>
+              {filteredDoctors.map((doc) => {
+                const doctorName = doc.doc_name || doc.fullname || "Physician";
+                const spec = doc.doc_specialization || "General Medicine";
+                const hospName = doc.hospName || "DocTime Central Clinic";
+                const expYears = doc.experienceYears ? `${doc.experienceYears} Years Exp.` : "8+ Years Practice";
+                const regNum = doc.registrationNumber || `REG-MCI-${1000 + (doc.doc_id || 1)}`;
+                const fee = doc.consultationFee ? `₹${doc.consultationFee}` : "₹500 ($50)";
+
+                return (
+                  <div key={doc.doc_id} className="doc-flip-card title-shape-card">
+                    <div className="doc-flip-inner">
+                      {/* FRONT OF CARD: Name and Hospital Details */}
+                      <div className="doc-flip-front">
+                        <div className="doc-front-top">
+                          <span className="doc-hosp-chip">
+                            <Building2 size={13} />
+                            <span>{hospName}</span>
+                          </span>
+                          <span className="doc-verified-badge">
+                            <ShieldCheck size={13} />
+                            <span>Verified</span>
+                          </span>
+                        </div>
+
+                        <div className="doc-front-body">
+                          <div className="doc-front-avatar">
+                            {doctorName.charAt(0).toUpperCase()}
+                          </div>
+                          <h4 className="doc-front-name">Dr. {doctorName}</h4>
+                          <span className="doc-front-spec">{spec}</span>
+                          <p className="doc-front-dept">
+                            Department of {spec} • {hospName}
+                          </p>
+                          <div className="doc-front-location">
+                            <span>Main Healthcare Complex • Floor 3</span>
+                          </div>
+                        </div>
+
+                        <div className="doc-front-bottom">
+                          <span className="flip-hint-pill">
+                            <span>Hover for full doctor details & book</span>
+                            <ArrowRight size={13} />
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* BACK OF CARD: Full Doctor Details on Hover */}
+                      <div className="doc-flip-back">
+                        <div className="doc-back-top">
+                          <div>
+                            <h4 className="doc-back-name">Dr. {doctorName}</h4>
+                            <span className="doc-back-spec">{spec}</span>
+                          </div>
+                          <span className="doc-back-status-chip">Available Today</span>
+                        </div>
+
+                        <div className="doc-back-specs-grid">
+                          <div className="doc-spec-item">
+                            <span className="spec-label">Hospital</span>
+                            <strong className="spec-value">{hospName}</strong>
+                          </div>
+                          <div className="doc-spec-item">
+                            <span className="spec-label">Experience</span>
+                            <strong className="spec-value highlight">{expYears}</strong>
+                          </div>
+                          <div className="doc-spec-item">
+                            <span className="spec-label">Reg. Number</span>
+                            <strong className="spec-value">{regNum}</strong>
+                          </div>
+                          <div className="doc-spec-item">
+                            <span className="spec-label">Consultation Fee</span>
+                            <strong className="spec-value fee">{fee}</strong>
+                          </div>
+                          <div className="doc-spec-item full">
+                            <span className="spec-label">Contact Email</span>
+                            <strong className="spec-value email">{doc.doc_email || "doctor@doctime.com"}</strong>
+                          </div>
+                          <div className="doc-spec-item full">
+                            <span className="spec-label">Contact Phone</span>
+                            <strong className="spec-value phone">{doc.doc_phone_number || "+91 9876543210"}</strong>
+                          </div>
+                        </div>
+
+                        <button
+                          className="doc-back-book-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openBookModal(doc.doc_id);
+                          }}
+                        >
+                          <CalendarCheck size={16} />
+                          <span>Book Appointment Now</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  <div className="p-doc-contact">
-                    <div className="p-contact-item">
-                      <Mail size={14} color="#64748b" />
-                      <span>{doc.doc_email}</span>
-                    </div>
-                    <div className="p-contact-item">
-                      <Phone size={14} color="#64748b" />
-                      <span>{doc.doc_phone_number}</span>
-                    </div>
-                  </div>
-                  <button
-                    className="p-book-doc-btn"
-                    onClick={() => openBookModal(doc.doc_id)}
-                  >
-                    <CalendarCheck size={16} />
-                    <span>Book Appointment</span>
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

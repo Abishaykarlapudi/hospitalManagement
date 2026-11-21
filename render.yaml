@@ -1,0 +1,25 @@
+services:
+  # 1. DocTime Backend (Spring Boot 4 / Java 21 REST API)
+  - type: web
+    name: doctime-backend
+    env: docker
+    rootDir: HospitalManagement-DocTime
+    dockerfilePath: Dockerfile
+    plan: free
+    healthCheckPath: /doctor/alldoctors
+    envVars:
+      - key: PORT
+        value: 1080
+
+  # 2. DocTime Frontend (Vite React Single Page Application)
+  - type: web
+    name: doctime-frontend
+    env: static
+    rootDir: doctime-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    plan: free
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

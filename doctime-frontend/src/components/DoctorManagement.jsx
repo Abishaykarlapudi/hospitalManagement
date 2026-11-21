@@ -345,7 +345,7 @@ export function DoctorManagement({
                       <td>
                         <a
                           href={`mailto:${doc.doc_email}`}
-                          className="contact-link"
+                          className="contact-link doctor"
                         >
                           <Mail size={13} /> {doc.doc_email}
                         </a>

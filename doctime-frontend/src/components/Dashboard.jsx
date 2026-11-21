@@ -52,11 +52,15 @@ export function Dashboard({
   return (
     <div className="dashboard-container">
       {/* Welcome Banner */}
-      <div className="welcome-banner">
+      <div className="welcome-banner title-shape-card">
         <div className="welcome-content">
+          <div className="dashboard-brand-row">
+            <span className="hub-app-name doctime-healthcare-title">DocTime Healthcare</span>
+            <span className="platform-tag">Enterprise Hospital Platform</span>
+          </div>
           <h2>Welcome to DocTime Central Clinic</h2>
           <p>
-            Connected to Spring Boot REST API. Complete hospital management for
+            Connected to Spring Boot REST API & TiDB Cloud 11-table database. Complete hospital management for
             physicians, patients, and clinical appointment bookings.
           </p>
           <div className="welcome-actions">

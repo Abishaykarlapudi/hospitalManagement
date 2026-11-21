@@ -71,10 +71,6 @@ export function QuickLookup({ showToast }) {
     <div className="section-container">
       <div className="lookup-hero">
         <h2>Direct Record Lookup by ID</h2>
-        <p>
-          Query any specific database record by its primary key using the backend's
-          dedicated <code>/docbyid/&#123;id&#125;</code> endpoints.
-        </p>
 
         {/* Target Type Selector */}
         <div className="lookup-type-pills">

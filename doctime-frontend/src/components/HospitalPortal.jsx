@@ -28,8 +28,26 @@ export function HospitalPortal({
   onRefresh,
   showToast,
   onBackToHub,
+  activeSession,
+  onOpenAuthModal,
+  onLogout,
 }) {
-  const [hospitalUser, setHospitalUser] = useState(() => authService.getHospitalUser());
+  const [hospitalUser, setHospitalUser] = useState(() => {
+    if (activeSession && (activeSession.role === "HOSPITAL" || activeSession.role === "ADMIN")) {
+      return activeSession.user || activeSession;
+    }
+    return authService.getHospitalUser();
+  });
+
+  // Synchronize with parent activeSession
+  React.useEffect(() => {
+    if (activeSession && (activeSession.role === "HOSPITAL" || activeSession.role === "ADMIN")) {
+      setHospitalUser(activeSession.user || activeSession);
+    } else if (!activeSession) {
+      setHospitalUser(null);
+    }
+  }, [activeSession]);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
@@ -68,12 +86,16 @@ export function HospitalPortal({
   };
 
   const handleLogout = () => {
-    authService.hospitalLogout();
-    setHospitalUser(null);
-    showToast("info", "Hospital Administrator signed out.");
+    if (onLogout) {
+      onLogout();
+    } else {
+      authService.hospitalLogout();
+      setHospitalUser(null);
+      showToast("info", "Hospital Administrator signed out.");
+    }
   };
 
-  // ==================== 1. HOSPITAL LOGIN SCREEN ====================
+  // ==================== 1. UNIFIED SINGLE HOSPITAL GATEWAY ====================
   if (!hospitalUser) {
     return (
       <div className="portal-auth-container">
@@ -85,59 +107,67 @@ export function HospitalPortal({
           <div className="portal-tag-pill hospital">Direct Link: /hospital • Port 5173</div>
         </div>
 
-        <div className="auth-card hospital-card title-card">
-          <div className="auth-card-top">
-            <div className="auth-avatar hospital">
+        <div className="auth-card hospital-card title-card" style={{ maxWidth: 500, margin: "0 auto", textAlign: "center" }}>
+          <div className="auth-card-top" style={{ marginBottom: 20 }}>
+            <div className="auth-avatar hospital" style={{ margin: "0 auto 14px auto" }}>
               <Building2 size={36} color="#2563eb" />
             </div>
-            <h2>Hospital Admin Sign In</h2>
-            <p>Access master hospital operations, doctors roster, patient records, and appointments.</p>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#ffffff", margin: 0 }}>Hospital Administration</h2>
+            <p style={{ color: "#94a3b8", fontSize: 13.5, marginTop: 6, lineHeight: 1.5 }}>
+              Single secure access with Brevo OTP email verification. Manage verified physicians, departments, and clinical appointments.
+            </p>
           </div>
 
-          <form onSubmit={handleLogin} className="auth-form">
-            <div className="form-group">
-              <label>Administrator Email or Username</label>
-              <div className="input-with-icon">
-                <input
-                  type="text"
-                  placeholder="admin@doctime.com"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, margin: "24px 0" }}>
+            <SpecularButton
+              size="lg"
+              radius={12}
+              tint="#2563eb"
+              tintOpacity={0.25}
+              textColor="#ffffff"
+              lineColor="#38bdf8"
+              baseColor="#1d4ed8"
+              style={{ width: "100%" }}
+              onClick={() => onOpenAuthModal ? onOpenAuthModal("HOSPITAL", "login") : handleLogin(null)}
+            >
+              <span>Single Sign In (All Roles)</span>
+              <ArrowRight size={16} />
+            </SpecularButton>
 
-            <div className="form-group">
-              <label>Password</label>
-              <div className="input-with-icon">
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+            <SpecularButton
+              size="lg"
+              radius={12}
+              tint="#10b981"
+              tintOpacity={0.25}
+              textColor="#ffffff"
+              lineColor="#34d399"
+              baseColor="#059669"
+              style={{ width: "100%" }}
+              onClick={() => onOpenAuthModal ? onOpenAuthModal("HOSPITAL", "register") : null}
+            >
+              <span>Register New Hospital Entity (Brevo OTP)</span>
+              <ShieldCheck size={16} />
+            </SpecularButton>
+          </div>
 
-            <button type="submit" className="auth-submit-btn hospital" disabled={loggingIn}>
-              {loggingIn ? "Authenticating..." : "Sign In to Hospital Portal"}
-            </button>
-
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16 }}>
             <button
               type="button"
               className="demo-credentials-btn"
-              onClick={handleFillDemo}
+              onClick={async () => {
+                try {
+                  const res = await authService.unifiedLogin("admin@doctime.com", "admin123");
+                  setHospitalUser(res.user || res);
+                  showToast("success", "Signed in as Hospital Administrator");
+                } catch {
+                  handleFillDemo();
+                }
+              }}
+              style={{ width: "100%", justifyContent: "center" }}
             >
-              <Zap size={14} color="#2563eb" />
-              <span>Fill Demo Credentials (admin@doctime.com / admin123)</span>
+              <Zap size={14} color="#38bdf8" />
+              <span>One-Click Administrator Demo (admin@doctime.com)</span>
             </button>
-          </form>
-
-          <div className="hospital-auth-notice">
-            <ShieldCheck size={16} color="#10b981" />
-            <span>Authorized hospital personnel only. Activity is audited.</span>
           </div>
         </div>
       </div>
@@ -158,6 +188,7 @@ export function HospitalPortal({
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         counts={counts}
+        backendOnline={backendOnline}
       />
 
       <div className="main-wrapper">

@@ -36,12 +36,12 @@ public class AppointmentController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
 
-	@GetMapping({"/allAppointments", "/all"})
+	@GetMapping({"/allAppointments", "/allappointments", "/all", "/getallappointments", "/getappointments", "/getAllAppointments"})
 	public ResponseEntity<List<Appointment>> getAllAppointments() {
 		return ResponseEntity.ok(appointmentService.getAllAppointment());
 	}
 
-	@GetMapping({"/appointmentbyid/{id}", "/docbyid/{id}", "/{id}"})
+	@GetMapping({"/appointmentbyid/{id}", "/docbyid/{id}", "/{id:[0-9]+}"})
 	public ResponseEntity<Appointment> getAppointmentById(@PathVariable Integer id) {
 		return ResponseEntity.ok(appointmentService.getAppointmentById(id));
 	}

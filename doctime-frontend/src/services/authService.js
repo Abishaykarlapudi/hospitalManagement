@@ -1,16 +1,114 @@
 import api from "../api";
 
 export const authService = {
-  // Hospital Login
+  // ==================== UNIFIED SINGLE LOGIN FOR ALL ROLES ====================
+
+  /**
+   * Single unified login for all roles (Hospital Admin, Doctor, Patient)
+   * Automatically resolves role, dispatches permissions, and returns portal target.
+   */
+  unifiedLogin: async (email, password = "", otp = "") => {
+    const payload = {
+      email: email.trim(),
+      username: email.trim(),
+      password: password ? password.trim() : undefined,
+      otp: otp ? otp.trim() : undefined,
+    };
+
+    const res = await api.post("/auth/login", payload);
+    const data = res.data;
+
+    if (data.success) {
+      localStorage.setItem("doctime_active_session", JSON.stringify(data));
+      localStorage.setItem("doctime_current_role", data.role);
+
+      // Save role-specific sessions for backward compatibility across existing views
+      if (data.role === "DOCTOR" && data.doctor) {
+        localStorage.setItem("doctime_doctor_user", JSON.stringify(data.doctor));
+      } else if (data.role === "PATIENT" && data.patient) {
+        localStorage.setItem("doctime_patient_user", JSON.stringify(data.patient));
+      } else if (data.role === "HOSPITAL" || data.role === "ADMIN") {
+        localStorage.setItem("doctime_hospital_user", JSON.stringify(data.user || data));
+      }
+      return data;
+    }
+    throw new Error(data.message || "Login failed");
+  },
+
+  /**
+   * Dispatch Brevo email verification code (6-digit OTP)
+   */
+  sendOtp: async (email, role = "PATIENT") => {
+    const res = await api.post("/auth/send-otp", {
+      email: email.trim(),
+      role: role.toUpperCase(),
+    });
+    return res.data;
+  },
+
+  /**
+   * Verify Brevo OTP code and complete login
+   */
+  verifyOtp: async (email, otp) => {
+    const res = await api.post("/auth/verify-otp", {
+      email: email.trim(),
+      otp: otp.trim(),
+    });
+    const data = res.data;
+
+    if (data.success) {
+      localStorage.setItem("doctime_active_session", JSON.stringify(data));
+      localStorage.setItem("doctime_current_role", data.role);
+
+      if (data.role === "DOCTOR" && data.doctor) {
+        localStorage.setItem("doctime_doctor_user", JSON.stringify(data.doctor));
+      } else if (data.role === "PATIENT" && data.patient) {
+        localStorage.setItem("doctime_patient_user", JSON.stringify(data.patient));
+      } else {
+        localStorage.setItem("doctime_hospital_user", JSON.stringify(data.user || data));
+      }
+      return data;
+    }
+    throw new Error(data.message || "OTP verification failed");
+  },
+
+  /**
+   * Unified registration for any role with Brevo verification email
+   */
+  unifiedRegister: async (formData) => {
+    const res = await api.post("/auth/register", formData);
+    return res.data;
+  },
+
+  /**
+   * Get currently active authenticated user session
+   */
+  getActiveSession: () => {
+    try {
+      const s = localStorage.getItem("doctime_active_session");
+      return s ? JSON.parse(s) : null;
+    } catch {
+      return null;
+    }
+  },
+
+  /**
+   * Log out from all portals
+   */
+  logoutAll: () => {
+    localStorage.removeItem("doctime_active_session");
+    localStorage.removeItem("doctime_current_role");
+    localStorage.removeItem("doctime_hospital_user");
+    localStorage.removeItem("doctime_doctor_user");
+    localStorage.removeItem("doctime_patient_user");
+  },
+
+  // ==================== LEGACY PORTAL LOGIN COMPATIBILITY ====================
+
   hospitalLogin: async (username, password) => {
     try {
-      const res = await api.post("/auth/hospital-login", { username, password });
-      if (res.data.success) {
-        localStorage.setItem("doctime_hospital_user", JSON.stringify(res.data));
-        return res.data;
-      }
+      return await authService.unifiedLogin(username, password);
     } catch (err) {
-      // Client-side fallback for Hospital Admin credentials
       const isValid =
         (username.toLowerCase() === "admin@doctime.com" || username.toLowerCase() === "admin") &&
         (password === "admin123" || password === "admin");
@@ -42,38 +140,21 @@ export const authService = {
     localStorage.removeItem("doctime_hospital_user");
   },
 
-  // Doctor Login
   doctorLogin: async (email) => {
     try {
-      const res = await api.post("/auth/doctor-login", { email });
-      if (res.data.success) {
-        localStorage.setItem("doctime_doctor_user", JSON.stringify(res.data.doctor));
-        return res.data;
-      }
+      return await authService.unifiedLogin(email, "password");
     } catch (err) {
-      // Graceful fallback to search doctors roster directly
-      let doctors = [];
       try {
-        const d1 = await api.get("/doctor/alldoctors");
-        doctors = Array.isArray(d1.data) ? d1.data : [];
-      } catch {
-        try {
-          const d2 = await api.get("/doctor/getdoctors");
-          doctors = Array.isArray(d2.data) ? d2.data : [];
-        } catch {}
-      }
-
-      const match = doctors.find(
-        (d) =>
-          (d.doc_email && d.doc_email.toLowerCase() === email.toLowerCase()) ||
-          (d.email && d.email.toLowerCase() === email.toLowerCase())
-      );
-
-      if (match) {
-        localStorage.setItem("doctime_doctor_user", JSON.stringify(match));
-        return { success: true, doctor: match };
-      }
-      throw new Error(err.message || `No doctor found with email: ${email}`);
+        const dRes = await api.get("/doctor/getalldoctors");
+        const match = dRes.data.find(
+          (d) => d.doc_email && d.doc_email.toLowerCase() === email.toLowerCase()
+        );
+        if (match) {
+          localStorage.setItem("doctime_doctor_user", JSON.stringify(match));
+          return { success: true, doctor: match };
+        }
+      } catch {}
+      throw err;
     }
   },
 
@@ -90,73 +171,21 @@ export const authService = {
     localStorage.removeItem("doctime_doctor_user");
   },
 
-  // Patient Login
   patientLogin: async (email) => {
     try {
-      const res = await api.post("/auth/patient-login", { email });
-      if (res.data.success) {
-        localStorage.setItem("doctime_patient_user", JSON.stringify(res.data.patient));
-        return res.data;
-      }
+      return await authService.unifiedLogin(email, "password");
     } catch (err) {
-      // Graceful fallback to search patients roster directly
-      let patients = [];
       try {
-        const p1 = await api.get("/patient/allPatients");
-        patients = Array.isArray(p1.data) ? p1.data : [];
-      } catch {
-        try {
-          const p2 = await api.get("/patient/getPatients");
-          patients = Array.isArray(p2.data) ? p2.data : [];
-        } catch {}
-      }
-
-      const match = patients.find(
-        (p) =>
-          (p.pa_email && p.pa_email.toLowerCase() === email.toLowerCase()) ||
-          (p.email && p.email.toLowerCase() === email.toLowerCase())
-      );
-
-      if (match) {
-        localStorage.setItem("doctime_patient_user", JSON.stringify(match));
-        return { success: true, patient: match };
-      }
-      throw new Error(err.message || `No patient found with email: ${email}`);
-    }
-  },
-
-  // Patient Register
-  patientRegister: async (patient) => {
-    const payload = {
-      pa_name: patient.pa_name.trim(),
-      userName: patient.pa_name.trim(),
-      name: patient.pa_name.trim(),
-      pa_age: Number(patient.pa_age) || 25,
-      age: Number(patient.pa_age) || 25,
-      pa_phone_number: Number(patient.pa_phone_number) || 0,
-      phoneNumber: Number(patient.pa_phone_number) || 0,
-      phone: Number(patient.pa_phone_number) || 0,
-      pa_email: patient.pa_email.trim(),
-      email: patient.pa_email.trim(),
-    };
-
-    try {
-      const res = await api.post("/auth/patient-register", payload);
-      const pat = res.data.patient || res.data;
-      localStorage.setItem("doctime_patient_user", JSON.stringify(pat));
-      return { success: true, patient: pat };
-    } catch (err) {
-      // Fallback to standard /patient/create
-      const fallbackPayload = {
-        pa_name: patient.pa_name.trim(),
-        pa_age: Number(patient.pa_age) || 25,
-        pa_phone_number: Number(patient.pa_phone_number) || 0,
-        pa_email: patient.pa_email.trim(),
-      };
-      const fbRes = await api.post("/patient/create", fallbackPayload);
-      const pat = fbRes.data;
-      localStorage.setItem("doctime_patient_user", JSON.stringify(pat));
-      return { success: true, patient: pat };
+        const pRes = await api.get("/patient/getallpatients");
+        const match = pRes.data.find(
+          (p) => p.pa_email && p.pa_email.toLowerCase() === email.toLowerCase()
+        );
+        if (match) {
+          localStorage.setItem("doctime_patient_user", JSON.stringify(match));
+          return { success: true, patient: match };
+        }
+      } catch {}
+      throw err;
     }
   },
 

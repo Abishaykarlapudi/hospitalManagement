@@ -1,10 +1,10 @@
 import React from "react";
-import { Building2, Stethoscope, User, ArrowRight, ShieldCheck, Calendar, Clock, Activity, Sparkles } from "lucide-react";
+import { Building2, Stethoscope, User, ArrowRight, ShieldCheck, Calendar, Clock, Activity, Sparkles, Brain, MailCheck, Database, Layers } from "lucide-react";
 import TiltedCard, { TiltedCardLayer } from "./TiltedCard";
 import SpecularButton from "./SpecularButton";
 import "./PortalTiltedCard.css";
 
-export function PortalHub({ onNavigate }) {
+export function PortalHub({ onNavigate, onOpenAuthModal, activeSession }) {
   const portals = [
     {
       id: "hospital",
@@ -170,6 +170,53 @@ export function PortalHub({ onNavigate }) {
               </div>
             );
           })}
+        </div>
+
+        {/* App & Webpage Comprehensive Details Section */}
+        <div className="hub-details-section">
+          <div className="hub-details-header">
+            <span className="hub-details-pill">System Architecture & Capabilities</span>
+            <h2>Complete Healthcare & Clinical Assistance Platform</h2>
+            <p>Designed for mission-critical hospital operations, physician roster management, and AI-assisted patient care.</p>
+          </div>
+
+          <div className="hub-features-grid">
+            <div className="hub-feature-card title-shape-card">
+              <div className="feature-icon-box cyan">
+                <Brain size={24} />
+              </div>
+              <h3>AI Clinical Assistant</h3>
+              <p>Google Gemini AI integration for instant medical report summarization, diagnostic terminology explanation, and appointment prep recommendations.</p>
+              <div className="feature-tech-badge">Spring Boot AI / REST API</div>
+            </div>
+
+            <div className="hub-feature-card title-shape-card">
+              <div className="feature-icon-box emerald">
+                <MailCheck size={24} />
+              </div>
+              <h3>Brevo Email OTP Verification</h3>
+              <p>Single sign-in for Hospital Staff, Doctors, and Patients backed by Brevo transactional 6-digit email OTP codes and password fallback.</p>
+              <div className="feature-tech-badge">Brevo API • Zero-Trust OTP</div>
+            </div>
+
+            <div className="hub-feature-card title-shape-card">
+              <div className="feature-icon-box blue">
+                <Database size={24} />
+              </div>
+              <h3>11-Table Relational Schema</h3>
+              <p>TiDB Cloud distributed MySQL engine supporting users, patients, hospitals, departments, doctors, qualifications, schedules, appointments & notifications.</p>
+              <div className="feature-tech-badge">TiDB Serverless • TB-1 to TB-11</div>
+            </div>
+
+            <div className="hub-feature-card title-shape-card">
+              <div className="feature-icon-box amber">
+                <Clock size={24} />
+              </div>
+              <h3>Real-Time Scheduling</h3>
+              <p>Live doctor availability tracking, appointment booking queue, instant status updates (Booked, Confirmed, Completed, Cancelled), and slot management.</p>
+              <div className="feature-tech-badge">Real-Time Doctor Roster</div>
+            </div>
+          </div>
         </div>
 
         {/* Footer Info */}

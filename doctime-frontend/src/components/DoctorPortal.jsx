@@ -22,8 +22,29 @@ import appointmentService from "../services/appointmentService";
 import doctorService from "../services/doctorService";
 import patientService from "../services/patientService";
 
-export function DoctorPortal({ onBackToHub, showToast }) {
-  const [currentDoctor, setCurrentDoctor] = useState(() => authService.getDoctorUser());
+export function DoctorPortal({
+  onBackToHub,
+  showToast,
+  activeSession,
+  onOpenAuthModal,
+  onLogout,
+}) {
+  const [currentDoctor, setCurrentDoctor] = useState(() => {
+    if (activeSession && (activeSession.doctor || activeSession.role === "DOCTOR")) {
+      return activeSession.doctor || activeSession.user;
+    }
+    return authService.getDoctorUser();
+  });
+
+  // Synchronize with parent activeSession
+  useEffect(() => {
+    if (activeSession && (activeSession.doctor || activeSession.role === "DOCTOR")) {
+      setCurrentDoctor(activeSession.doctor || activeSession.user);
+    } else if (!activeSession) {
+      setCurrentDoctor(null);
+    }
+  }, [activeSession]);
+
   const [emailInput, setEmailInput] = useState("");
   const [registeredDoctors, setRegisteredDoctors] = useState([]);
   const [loadingDocs, setLoadingDocs] = useState(false);
@@ -98,8 +119,10 @@ export function DoctorPortal({ onBackToHub, showToast }) {
     setLoggingIn(true);
     try {
       const res = await authService.doctorLogin(targetEmail.trim());
-      setCurrentDoctor(res.doctor);
-      showToast("success", `Welcome back, Dr. ${res.doctor.doc_name}!`);
+      const doctorObj = res.doctor || res.user || res;
+      setCurrentDoctor(doctorObj);
+      const displayName = doctorObj?.doc_name || doctorObj?.fullname || "Doctor";
+      showToast("success", `Welcome back, Dr. ${displayName}!`);
     } catch (err) {
       showToast("error", err.message || "Failed to log in as doctor.");
     } finally {
@@ -108,10 +131,14 @@ export function DoctorPortal({ onBackToHub, showToast }) {
   };
 
   const handleLogout = () => {
-    authService.doctorLogout();
-    setCurrentDoctor(null);
-    setAppointments([]);
-    showToast("info", "Doctor signed out.");
+    if (onLogout) {
+      onLogout();
+    } else {
+      authService.doctorLogout();
+      setCurrentDoctor(null);
+      setAppointments([]);
+      showToast("info", "Doctor signed out.");
+    }
   };
 
   // Status Update (Confirm, Complete, Cancel)
@@ -190,7 +217,7 @@ export function DoctorPortal({ onBackToHub, showToast }) {
     return { total, booked, confirmed, completed, cancelled };
   }, [appointments]);
 
-  // ==================== 1. LOGIN SCREEN ====================
+  // ==================== 1. UNIFIED SINGLE DOCTOR GATEWAY ====================
   if (!currentDoctor) {
     return (
       <div className="portal-auth-container">
@@ -202,42 +229,59 @@ export function DoctorPortal({ onBackToHub, showToast }) {
           <div className="portal-tag-pill doctor">Direct Link: /doctor • Port 5174</div>
         </div>
 
-        <div className="auth-card doctor-card title-card">
-          <div className="auth-card-top">
-            <div className="auth-avatar doctor">
+        <div className="auth-card doctor-card title-card" style={{ maxWidth: 500, margin: "0 auto", textAlign: "center" }}>
+          <div className="auth-card-top" style={{ marginBottom: 20 }}>
+            <div className="auth-avatar doctor" style={{ margin: "0 auto 14px auto" }}>
               <Stethoscope size={36} color="#059669" />
             </div>
-            <h2>Doctor Portal Sign In</h2>
-            <p>Access your consultation queue, assigned patient list, and clinical schedule.</p>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#ffffff", margin: 0 }}>DocTime Clinical Portal</h2>
+            <p style={{ color: "#94a3b8", fontSize: 13.5, marginTop: 6, lineHeight: 1.5 }}>
+              Single secure access with Brevo OTP email verification. Review clinical schedule and patient consultation queue.
+            </p>
           </div>
 
-          <form onSubmit={handleLogin} className="auth-form">
-            <div className="form-group">
-              <label>Doctor Registered Email Address</label>
-              <input
-                type="email"
-                placeholder="e.g., doctor@hospital.com"
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                required
-              />
-            </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, margin: "24px 0" }}>
+            <SpecularButton
+              size="lg"
+              radius={12}
+              tint="#10b981"
+              tintOpacity={0.25}
+              textColor="#ffffff"
+              lineColor="#34d399"
+              baseColor="#059669"
+              style={{ width: "100%" }}
+              onClick={() => onOpenAuthModal ? onOpenAuthModal("DOCTOR", "login") : handleLogin(null, "nagaraju@gamil.com")}
+            >
+              <span>Single Sign In (All Roles)</span>
+              <ArrowRight size={16} />
+            </SpecularButton>
 
-            <button type="submit" className="auth-submit-btn doctor" disabled={loggingIn}>
-              {loggingIn ? "Verifying Credentials..." : "Sign In to Doctor Dashboard"}
-            </button>
-          </form>
+            <SpecularButton
+              size="lg"
+              radius={12}
+              tint="#06b6d4"
+              tintOpacity={0.25}
+              textColor="#ffffff"
+              lineColor="#38bdf8"
+              baseColor="#0891b2"
+              style={{ width: "100%" }}
+              onClick={() => onOpenAuthModal ? onOpenAuthModal("DOCTOR", "register") : null}
+            >
+              <span>Register New Physician (Brevo OTP)</span>
+              <ShieldCheck size={16} />
+            </SpecularButton>
+          </div>
 
           {/* Quick Doctor Selector */}
-          <div className="auth-quick-select">
-            <h4>Or Select from Registered Doctors:</h4>
+          <div className="auth-quick-select" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16, textAlign: "left" }}>
+            <h4 style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 10px 0" }}>Fast One-Click Demo Physicians:</h4>
             {loadingDocs ? (
               <div className="quick-loading">Loading doctors roster...</div>
             ) : registeredDoctors.length === 0 ? (
               <div className="quick-empty">No doctors in database. Add via Hospital Portal.</div>
             ) : (
               <div className="quick-doc-list">
-                {registeredDoctors.map((doc) => (
+                {registeredDoctors.slice(0, 3).map((doc) => (
                   <button
                     key={doc.doc_id}
                     className="quick-doc-item"
@@ -276,11 +320,11 @@ export function DoctorPortal({ onBackToHub, showToast }) {
 
         <div className="doc-profile-pill">
           <div className="doc-avatar-large">
-            {currentDoctor.doc_name?.charAt(0)?.toUpperCase()}
+            {(currentDoctor?.doc_name || currentDoctor?.fullname || "D").charAt(0)?.toUpperCase()}
           </div>
           <div className="doc-text">
-            <strong>Dr. {currentDoctor.doc_name}</strong>
-            <span>{currentDoctor.doc_specialization} • ID #{currentDoctor.doc_id}</span>
+            <strong>Dr. {currentDoctor?.doc_name || currentDoctor?.fullname || "Doctor"}</strong>
+            <span>{(currentDoctor?.doc_specialization || currentDoctor?.specialization || "Physician")} • ID #{currentDoctor?.doc_id || currentDoctor?.doctorId || 1}</span>
           </div>
           <button className="doc-logout-btn" onClick={handleLogout} title="Sign Out">
             <LogOut size={16} />
@@ -294,11 +338,11 @@ export function DoctorPortal({ onBackToHub, showToast }) {
         {/* Welcome & Stats Row */}
         <div className="doctor-welcome-card">
           <div className="doc-welcome-text">
-            <h2>Welcome back, Dr. {currentDoctor.doc_name}</h2>
+            <h2>Welcome back, Dr. {currentDoctor?.doc_name || currentDoctor?.fullname || "Doctor"}</h2>
             <p>
-              Specialization: <strong>{currentDoctor.doc_specialization}</strong> | Contact:{" "}
-              <strong>{currentDoctor.doc_email}</strong> | Tel:{" "}
-              <strong>{currentDoctor.doc_phone_number}</strong>
+              Specialization: <strong>{currentDoctor?.doc_specialization || currentDoctor?.specialization || "General Medicine"}</strong> | Contact:{" "}
+              <strong>{currentDoctor?.doc_email || currentDoctor?.email}</strong> | Tel:{" "}
+              <strong>{currentDoctor?.doc_phone_number || currentDoctor?.phone}</strong>
             </p>
           </div>
           <div className="doc-actions-right">
