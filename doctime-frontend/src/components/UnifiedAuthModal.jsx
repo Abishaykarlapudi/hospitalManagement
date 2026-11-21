@@ -27,8 +27,22 @@ export function UnifiedAuthModal({ isOpen, onClose, onSuccess, initialRole = "PA
   React.useEffect(() => {
     if (isOpen) {
       setAuthMode(initialMode || "login");
+      const r = (initialRole || "PATIENT").toUpperCase();
+      setRegRole(r);
+      if (!email) {
+        if (r === "HOSPITAL" || r === "ADMIN") {
+          setEmail("admin@doctime.com");
+          setPassword("admin123");
+        } else if (r === "DOCTOR") {
+          setEmail("nagaraju@gamil.com");
+          setPassword("password");
+        } else {
+          setEmail("kabishay1@gmail.com");
+          setPassword("password");
+        }
+      }
     }
-  }, [isOpen, initialMode]);
+  }, [isOpen, initialMode, initialRole]);
 
   // Login form state
   const [email, setEmail] = useState("");

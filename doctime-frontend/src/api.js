@@ -1,7 +1,13 @@
 import axios from "axios";
 
-// DocTime Spring Boot Backend runs on port 1080
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:1080";
+// DocTime Spring Boot Backend
+// When running locally: http://localhost:1080
+// When hosted together on Render (https://doctime-backend-di1m.onrender.com): relative path ""
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (typeof window !== "undefined" && window.location.hostname === "localhost"
+    ? "http://localhost:1080"
+    : "");
 
 const api = axios.create({
   baseURL: API_BASE_URL,
