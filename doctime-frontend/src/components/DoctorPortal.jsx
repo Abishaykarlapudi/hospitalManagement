@@ -12,15 +12,18 @@ import {
   LogOut,
   RefreshCw,
   ArrowLeft,
+  ArrowRight,
   ChevronRight,
   ShieldCheck,
   Check,
-  X
+  X,
+  LogIn
 } from "lucide-react";
 import authService from "../services/authService";
 import appointmentService from "../services/appointmentService";
 import doctorService from "../services/doctorService";
 import patientService from "../services/patientService";
+import SpecularButton from "./SpecularButton";
 
 export function DoctorPortal({
   onBackToHub,
@@ -46,6 +49,7 @@ export function DoctorPortal({
   }, [activeSession]);
 
   const [emailInput, setEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
   const [registeredDoctors, setRegisteredDoctors] = useState([]);
   const [loadingDocs, setLoadingDocs] = useState(false);
   const [loggingIn, setLoggingIn] = useState(false);
@@ -108,9 +112,10 @@ export function DoctorPortal({
   }, [currentDoctor, loadDoctorAppointments]);
 
   // Handle Login
-  const handleLogin = async (e, directEmail = null) => {
+  const handleLogin = async (e, directEmail = null, directPassword = null) => {
     if (e) e.preventDefault();
     const targetEmail = directEmail || emailInput;
+    const targetPassword = directPassword || passwordInput;
     if (!targetEmail.trim()) {
       showToast("error", "Please enter your doctor email address.");
       return;
@@ -118,7 +123,7 @@ export function DoctorPortal({
 
     setLoggingIn(true);
     try {
-      const res = await authService.doctorLogin(targetEmail.trim());
+      const res = await authService.unifiedLogin(targetEmail.trim(), targetPassword || "password");
       const doctorObj = res.doctor || res.user || res;
       setCurrentDoctor(doctorObj);
       const displayName = doctorObj?.doc_name || doctorObj?.fullname || "Doctor";
@@ -229,52 +234,106 @@ export function DoctorPortal({
           <div className="portal-tag-pill doctor">Direct Link: /doctor • Port 5174</div>
         </div>
 
-        <div className="auth-card doctor-card title-card" style={{ maxWidth: 500, margin: "0 auto", textAlign: "center" }}>
-          <div className="auth-card-top" style={{ marginBottom: 20 }}>
-            <div className="auth-avatar doctor" style={{ margin: "0 auto 14px auto" }}>
+        <div className="auth-card doctor-card title-card" style={{ maxWidth: 480, margin: "0 auto" }}>
+          <div className="auth-card-top" style={{ marginBottom: 20, textAlign: "center" }}>
+            <div className="auth-avatar doctor" style={{ margin: "0 auto 12px auto" }}>
               <Stethoscope size={36} color="#059669" />
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#ffffff", margin: 0 }}>DocTime Clinical Portal</h2>
-            <p style={{ color: "#94a3b8", fontSize: 13.5, marginTop: 6, lineHeight: 1.5 }}>
-              Single secure access with Brevo OTP email verification. Review clinical schedule and patient consultation queue.
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#ffffff", margin: 0 }}>Doctor Portal Login</h2>
+            <p style={{ color: "#94a3b8", fontSize: 13, marginTop: 4 }}>
+              Sign in to manage clinical schedules, consultation queues, and patient records.
             </p>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, margin: "24px 0" }}>
+          <form onSubmit={handleLogin} className="auth-form">
+            <div className="form-group" style={{ marginBottom: 14 }}>
+              <label style={{ display: "block", color: "#cbd5e1", fontSize: 12.5, fontWeight: 600, marginBottom: 6 }}>
+                Doctor Email Address
+              </label>
+              <input
+                type="email"
+                placeholder="e.g. nagaraju@gamil.com"
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  padding: "11px 14px",
+                  background: "rgba(15, 23, 42, 0.85)",
+                  border: "1px solid rgba(255, 255, 255, 0.14)",
+                  borderRadius: 10,
+                  color: "#ffffff",
+                  fontSize: 13.5,
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            <div className="form-group" style={{ marginBottom: 18 }}>
+              <label style={{ display: "block", color: "#cbd5e1", fontSize: 12.5, fontWeight: 600, marginBottom: 6 }}>
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="Enter password (e.g. password)"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "11px 14px",
+                  background: "rgba(15, 23, 42, 0.85)",
+                  border: "1px solid rgba(255, 255, 255, 0.14)",
+                  borderRadius: 10,
+                  color: "#ffffff",
+                  fontSize: 13.5,
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
             <SpecularButton
               size="lg"
               radius={12}
-              tint="#10b981"
+              tint="#059669"
               tintOpacity={0.25}
               textColor="#ffffff"
               lineColor="#34d399"
-              baseColor="#059669"
-              style={{ width: "100%" }}
-              onClick={() => onOpenAuthModal ? onOpenAuthModal("DOCTOR", "login") : handleLogin(null, "nagaraju@gamil.com")}
+              baseColor="#047857"
+              style={{ width: "100%", marginBottom: 10 }}
+              onClick={handleLogin}
+              disabled={loggingIn}
             >
-              <span>Single Sign In (All Roles)</span>
-              <ArrowRight size={16} />
+              <LogIn size={16} />
+              <span>{loggingIn ? "Verifying Credentials..." : "Login to Doctor Portal"}</span>
             </SpecularButton>
 
-            <SpecularButton
-              size="lg"
-              radius={12}
-              tint="#06b6d4"
-              tintOpacity={0.25}
-              textColor="#ffffff"
-              lineColor="#38bdf8"
-              baseColor="#0891b2"
-              style={{ width: "100%" }}
+            <button
+              type="button"
               onClick={() => onOpenAuthModal ? onOpenAuthModal("DOCTOR", "register") : null}
+              style={{
+                width: "100%",
+                background: "rgba(6, 182, 212, 0.15)",
+                border: "1px solid rgba(56, 189, 248, 0.4)",
+                color: "#38bdf8",
+                padding: "9px 14px",
+                borderRadius: 10,
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+              }}
             >
+              <ShieldCheck size={15} />
               <span>Register New Physician (Brevo OTP)</span>
-              <ShieldCheck size={16} />
-            </SpecularButton>
-          </div>
+            </button>
+          </form>
 
           {/* Quick Doctor Selector */}
-          <div className="auth-quick-select" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16, textAlign: "left" }}>
-            <h4 style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 10px 0" }}>Fast One-Click Demo Physicians:</h4>
+          <div className="auth-quick-select" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16, marginTop: 18 }}>
+            <h4 style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 10px 0" }}>Or Fast One-Click Demo Physicians:</h4>
             {loadingDocs ? (
               <div className="quick-loading">Loading doctors roster...</div>
             ) : registeredDoctors.length === 0 ? (
@@ -284,8 +343,9 @@ export function DoctorPortal({
                 {registeredDoctors.slice(0, 3).map((doc) => (
                   <button
                     key={doc.doc_id}
+                    type="button"
                     className="quick-doc-item"
-                    onClick={() => handleLogin(null, doc.doc_email)}
+                    onClick={() => handleLogin(null, doc.doc_email, "password")}
                   >
                     <div className="q-avatar">{doc.doc_name?.charAt(0)}</div>
                     <div className="q-info">

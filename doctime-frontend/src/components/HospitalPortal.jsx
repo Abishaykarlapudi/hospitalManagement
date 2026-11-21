@@ -3,12 +3,14 @@ import {
   Building2,
   ShieldCheck,
   ArrowLeft,
+  ArrowRight,
   KeyRound,
   UserCheck,
   Zap,
   Lock,
   Mail,
-  LogOut
+  LogOut,
+  LogIn
 } from "lucide-react";
 import authService from "../services/authService";
 import Sidebar from "./Sidebar";
@@ -18,6 +20,7 @@ import DoctorManagement from "./DoctorManagement";
 import PatientManagement from "./PatientManagement";
 import AppointmentManagement from "./AppointmentManagement";
 import QuickLookup from "./QuickLookup";
+import SpecularButton from "./SpecularButton";
 
 export function HospitalPortal({
   doctors,
@@ -61,17 +64,19 @@ export function HospitalPortal({
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
 
   // Login handler
-  const handleLogin = async (e) => {
+  const handleLogin = async (e, directUser = null, directPass = null) => {
     if (e) e.preventDefault();
-    if (!username.trim() || !password.trim()) {
+    const targetUser = directUser || username;
+    const targetPass = directPass || password;
+    if (!targetUser.trim() || !targetPass.trim()) {
       showToast("error", "Please enter both hospital username and password.");
       return;
     }
 
     setLoggingIn(true);
     try {
-      const res = await authService.hospitalLogin(username.trim(), password.trim());
-      setHospitalUser(res);
+      const res = await authService.unifiedLogin(targetUser.trim(), targetPass.trim());
+      setHospitalUser(res.user || res);
       showToast("success", "Hospital Administration authenticated successfully.");
     } catch (err) {
       showToast("error", err.message || "Invalid hospital credentials.");
@@ -107,18 +112,64 @@ export function HospitalPortal({
           <div className="portal-tag-pill hospital">Direct Link: /hospital • Port 5173</div>
         </div>
 
-        <div className="auth-card hospital-card title-card" style={{ maxWidth: 500, margin: "0 auto", textAlign: "center" }}>
-          <div className="auth-card-top" style={{ marginBottom: 20 }}>
-            <div className="auth-avatar hospital" style={{ margin: "0 auto 14px auto" }}>
+        <div className="auth-card hospital-card title-card" style={{ maxWidth: 480, margin: "0 auto" }}>
+          <div className="auth-card-top" style={{ marginBottom: 20, textAlign: "center" }}>
+            <div className="auth-avatar hospital" style={{ margin: "0 auto 12px auto" }}>
               <Building2 size={36} color="#2563eb" />
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#ffffff", margin: 0 }}>Hospital Administration</h2>
-            <p style={{ color: "#94a3b8", fontSize: 13.5, marginTop: 6, lineHeight: 1.5 }}>
-              Single secure access with Brevo OTP email verification. Manage verified physicians, departments, and clinical appointments.
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#ffffff", margin: 0 }}>Hospital Admin Login</h2>
+            <p style={{ color: "#94a3b8", fontSize: 13, marginTop: 4 }}>
+              Sign in to manage verified physicians, clinical departments, and appointment booking queues.
             </p>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, margin: "24px 0" }}>
+          <form onSubmit={handleLogin} className="auth-form">
+            <div className="form-group" style={{ marginBottom: 14 }}>
+              <label style={{ display: "block", color: "#cbd5e1", fontSize: 12.5, fontWeight: 600, marginBottom: 6 }}>
+                Administrator Email or Username
+              </label>
+              <input
+                type="text"
+                placeholder="admin@doctime.com"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  padding: "11px 14px",
+                  background: "rgba(15, 23, 42, 0.85)",
+                  border: "1px solid rgba(255, 255, 255, 0.14)",
+                  borderRadius: 10,
+                  color: "#ffffff",
+                  fontSize: 13.5,
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            <div className="form-group" style={{ marginBottom: 18 }}>
+              <label style={{ display: "block", color: "#cbd5e1", fontSize: 12.5, fontWeight: 600, marginBottom: 6 }}>
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="•••••••• (e.g. admin123)"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  padding: "11px 14px",
+                  background: "rgba(15, 23, 42, 0.85)",
+                  border: "1px solid rgba(255, 255, 255, 0.14)",
+                  borderRadius: 10,
+                  color: "#ffffff",
+                  fontSize: 13.5,
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
             <SpecularButton
               size="lg"
               radius={12}
@@ -127,46 +178,47 @@ export function HospitalPortal({
               textColor="#ffffff"
               lineColor="#38bdf8"
               baseColor="#1d4ed8"
-              style={{ width: "100%" }}
-              onClick={() => onOpenAuthModal ? onOpenAuthModal("HOSPITAL", "login") : handleLogin(null)}
+              style={{ width: "100%", marginBottom: 10 }}
+              onClick={handleLogin}
+              disabled={loggingIn}
             >
-              <span>Single Sign In (All Roles)</span>
-              <ArrowRight size={16} />
+              <LogIn size={16} />
+              <span>{loggingIn ? "Authenticating..." : "Login to Hospital Portal"}</span>
             </SpecularButton>
 
-            <SpecularButton
-              size="lg"
-              radius={12}
-              tint="#10b981"
-              tintOpacity={0.25}
-              textColor="#ffffff"
-              lineColor="#34d399"
-              baseColor="#059669"
-              style={{ width: "100%" }}
+            <button
+              type="button"
               onClick={() => onOpenAuthModal ? onOpenAuthModal("HOSPITAL", "register") : null}
+              style={{
+                width: "100%",
+                background: "rgba(16, 185, 129, 0.15)",
+                border: "1px solid rgba(52, 211, 153, 0.4)",
+                color: "#34d399",
+                padding: "9px 14px",
+                borderRadius: 10,
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+              }}
             >
+              <ShieldCheck size={15} />
               <span>Register New Hospital Entity (Brevo OTP)</span>
-              <ShieldCheck size={16} />
-            </SpecularButton>
-          </div>
+            </button>
+          </form>
 
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16 }}>
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16, marginTop: 18 }}>
             <button
               type="button"
               className="demo-credentials-btn"
-              onClick={async () => {
-                try {
-                  const res = await authService.unifiedLogin("admin@doctime.com", "admin123");
-                  setHospitalUser(res.user || res);
-                  showToast("success", "Signed in as Hospital Administrator");
-                } catch {
-                  handleFillDemo();
-                }
-              }}
+              onClick={() => handleLogin(null, "admin@doctime.com", "admin123")}
               style={{ width: "100%", justifyContent: "center" }}
             >
               <Zap size={14} color="#38bdf8" />
-              <span>One-Click Administrator Demo (admin@doctime.com)</span>
+              <span>Fast One-Click Demo Admin (admin@doctime.com / admin123)</span>
             </button>
           </div>
         </div>
