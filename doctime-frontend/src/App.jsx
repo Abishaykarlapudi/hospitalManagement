@@ -251,10 +251,16 @@ export function App() {
         onSuccess={(session) => {
           setActiveSession(session);
           setIsAuthModalOpen(false);
+          let targetPortal = "hub";
           if (session.redirectPortal) {
-            const targetPortal = session.redirectPortal.replace("/", "");
-            handleNavigatePortal(targetPortal);
+            targetPortal = session.redirectPortal.replace("/", "");
+          } else if (session.role) {
+            const r = session.role.toLowerCase();
+            targetPortal = r === "hospital" || r === "admin" ? "hospital" : r;
+          } else if (authModalRole) {
+            targetPortal = authModalRole.toLowerCase();
           }
+          handleNavigatePortal(targetPortal);
         }}
       />
 

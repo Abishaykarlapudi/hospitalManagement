@@ -278,63 +278,18 @@ export function PatientPortal({
           <div className="portal-tag-pill patient">Direct Link: /patient • Port 5175</div>
         </div>
 
-        <div className="auth-card patient-card title-card" style={{ maxWidth: 480, margin: "0 auto" }}>
-          <div className="auth-card-top" style={{ marginBottom: 20, textAlign: "center" }}>
+        <div className="auth-card patient-card title-card" style={{ maxWidth: 480, margin: "0 auto", textAlign: "center" }}>
+          <div className="auth-card-top" style={{ marginBottom: 20 }}>
             <div className="auth-avatar patient" style={{ margin: "0 auto 12px auto" }}>
               <User size={36} color="#ea580c" />
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#ffffff", margin: 0 }}>Patient Portal Login</h2>
-            <p style={{ color: "#94a3b8", fontSize: 13, marginTop: 4 }}>
-              Sign in to book doctor appointments, view prescriptions, and manage medical reports.
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#ffffff", margin: 0 }}>DocTime Patient Services</h2>
+            <p style={{ color: "#94a3b8", fontSize: 13.5, marginTop: 6, lineHeight: 1.5 }}>
+              DocTime utilizes a single unified sign-in for all roles. Sign in to book appointments, consult certified doctors, and access medical records.
             </p>
           </div>
 
-          <form onSubmit={handleLogin} className="auth-form">
-            <div className="form-group" style={{ marginBottom: 14 }}>
-              <label style={{ display: "block", color: "#cbd5e1", fontSize: 12.5, fontWeight: 600, marginBottom: 6 }}>
-                Patient Email Address
-              </label>
-              <input
-                type="email"
-                placeholder="e.g. kabishay1@gmail.com"
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "11px 14px",
-                  background: "rgba(15, 23, 42, 0.85)",
-                  border: "1px solid rgba(255, 255, 255, 0.14)",
-                  borderRadius: 10,
-                  color: "#ffffff",
-                  fontSize: 13.5,
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-
-            <div className="form-group" style={{ marginBottom: 18 }}>
-              <label style={{ display: "block", color: "#cbd5e1", fontSize: 12.5, fontWeight: 600, marginBottom: 6 }}>
-                Password
-              </label>
-              <input
-                type="password"
-                placeholder="•••••••• (default: password)"
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "11px 14px",
-                  background: "rgba(15, 23, 42, 0.85)",
-                  border: "1px solid rgba(255, 255, 255, 0.14)",
-                  borderRadius: 10,
-                  color: "#ffffff",
-                  fontSize: 13.5,
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, margin: "24px 0" }}>
             <SpecularButton
               size="lg"
               radius={12}
@@ -343,12 +298,12 @@ export function PatientPortal({
               textColor="#ffffff"
               lineColor="#fb923c"
               baseColor="#c2410c"
-              style={{ width: "100%", marginBottom: 10 }}
-              onClick={handleLogin}
-              disabled={loggingIn}
+              style={{ width: "100%" }}
+              onClick={() => onOpenAuthModal ? onOpenAuthModal("PATIENT", "login") : handleLogin(null, "kabishay1@gmail.com", "password")}
             >
               <LogIn size={16} />
-              <span>{loggingIn ? "Authenticating..." : "Login to Patient Portal"}</span>
+              <span>DocTime Single Sign-In (Patient)</span>
+              <ArrowRight size={16} />
             </SpecularButton>
 
             <button
@@ -359,7 +314,7 @@ export function PatientPortal({
                 background: "rgba(16, 185, 129, 0.15)",
                 border: "1px solid rgba(52, 211, 153, 0.4)",
                 color: "#34d399",
-                padding: "9px 14px",
+                padding: "10px 14px",
                 borderRadius: 10,
                 fontSize: 13,
                 fontWeight: 600,
@@ -373,7 +328,7 @@ export function PatientPortal({
               <ShieldCheck size={15} />
               <span>Register New Patient Account (Brevo OTP)</span>
             </button>
-          </form>
+          </div>
 
           {/* Quick Select demo patients */}
           <div className="auth-quick-select" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 16, marginTop: 18, textAlign: "left" }}>

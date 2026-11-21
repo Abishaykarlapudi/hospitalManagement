@@ -18,7 +18,7 @@ export function PortalHub({ onNavigate, onOpenAuthModal, activeSession }) {
       accentColor: "#2563eb",
       link: "/hospital",
       port: "Port 5173",
-      loginNote: "admin@doctime.com / admin123",
+      loginNote: "Single Sign In (admin@doctime.com / admin123)",
     },
     {
       id: "doctor",
@@ -32,7 +32,7 @@ export function PortalHub({ onNavigate, onOpenAuthModal, activeSession }) {
       accentColor: "#059669",
       link: "/doctor",
       port: "Port 5174",
-      loginNote: "Sign in with registered doctor email",
+      loginNote: "Single Sign In (e.g. nagaraju@gamil.com)",
     },
     {
       id: "patient",
@@ -46,7 +46,7 @@ export function PortalHub({ onNavigate, onOpenAuthModal, activeSession }) {
       accentColor: "#ea580c",
       link: "/patient",
       port: "Port 5175",
-      loginNote: "Sign in with email or register new patient",
+      loginNote: "Single Sign In (e.g. kabishay1@gmail.com)",
     },
   ];
 
@@ -102,7 +102,13 @@ export function PortalHub({ onNavigate, onOpenAuthModal, activeSession }) {
                   radius={18}
                   showTooltip={false}
                   flipOnClick={false}
-                  onClick={() => onNavigate(portal.id)}
+                  onClick={() => {
+                    if (activeSession) {
+                      onNavigate(portal.id);
+                    } else {
+                      onOpenAuthModal(portal.id.toUpperCase(), "login");
+                    }
+                  }}
                 >
                   <TiltedCardLayer depth={25}>
                     <div
@@ -154,10 +160,18 @@ export function PortalHub({ onNavigate, onOpenAuthModal, activeSession }) {
                           style={{ width: "100%" }}
                           onClick={(e) => {
                             e.stopPropagation();
-                            onNavigate(portal.id);
+                            if (activeSession) {
+                              onNavigate(portal.id);
+                            } else {
+                              onOpenAuthModal(portal.id.toUpperCase(), "login");
+                            }
                           }}
                         >
-                          <span>Launch {portal.title.split(" ")[0]} Portal</span>
+                          <span>
+                            {activeSession
+                              ? `Launch ${portal.title.split(" ")[0]} Portal`
+                              : `Single Sign In (${portal.title.split(" ")[0]})`}
+                          </span>
                           <ArrowRight size={16} />
                         </SpecularButton>
                         <div className="portal-direct-link">
