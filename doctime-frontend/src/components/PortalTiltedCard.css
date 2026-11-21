@@ -1,0 +1,146 @@
+/* ==========================================================================
+   Tilted Card Glass Styling in DocTime Hub
+   ========================================================================== */
+
+.portal-tilted-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.portal-glass-tilted-card {
+  width: 100%;
+  height: 100%;
+  padding: 28px 24px;
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  color: #f8fafc;
+  box-sizing: border-box;
+}
+
+.portal-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.portal-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.portal-badge-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.portal-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.port-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.portal-card-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 6px;
+}
+
+.portal-card-subtitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #38bdf8;
+  margin-bottom: 12px;
+}
+
+.portal-card-desc {
+  font-size: 13.5px;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+
+.portal-login-hint {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 16px;
+}
+
+.portal-login-hint strong {
+  color: #e2e8f0;
+}
+
+.portal-card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.portal-launch-btn {
+  width: 100%;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.portal-launch-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+}
+
+.portal-direct-link {
+  text-align: center;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.portal-direct-link code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #38bdf8;
+}

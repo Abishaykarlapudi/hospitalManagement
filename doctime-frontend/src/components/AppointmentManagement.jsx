@@ -77,6 +77,8 @@ export function AppointmentManagement({
       const patient = patientMap[app.pa_id];
       const appDate = formatAppDate(app.appointment_date);
 
+      const appStatus = app.status || app.stautes || "";
+
       const matchSearch =
         String(app.app_id || "").includes(searchTerm) ||
         String(app.doc_id || "").includes(searchTerm) ||
@@ -84,11 +86,11 @@ export function AppointmentManagement({
         (doc?.doc_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         (doc?.doc_specialization || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         (patient?.pa_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (app.stautes || "").toLowerCase().includes(searchTerm.toLowerCase());
+        appStatus.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchStatus =
         statusFilter === "ALL" ||
-        (app.stautes || "").toUpperCase() === statusFilter.toUpperCase();
+        appStatus.toUpperCase() === statusFilter.toUpperCase();
 
       const matchDate =
         !dateFilter || appDate === dateFilter;
@@ -191,6 +193,17 @@ export function AppointmentManagement({
       setRescheduleValue(formatAppDate(app.appointment_date));
     } else {
       setRescheduleValue(app.appointment_time ? app.appointment_time.slice(0, 5) : "10:00");
+    }
+  };
+
+  // Quick Status Change (PATCH)
+  const handleStatusChange = async (app, newStatus) => {
+    try {
+      await appointmentService.updateStatus(app.app_id, newStatus);
+      showToast("success", `Appointment #${app.app_id} status set to ${newStatus}.`);
+      await onRefresh();
+    } catch (err) {
+      showToast("error", err.message || "Failed to update appointment status.");
     }
   };
 
@@ -398,7 +411,7 @@ export function AppointmentManagement({
                 {filteredAppointments.map((app) => {
                   const doc = doctorMap[app.doc_id];
                   const patient = patientMap[app.pa_id];
-                  const status = app.stautes || "BOOKED";
+                  const status = app.status || app.stautes || "BOOKED";
 
                   return (
                     <tr key={app.app_id}>
@@ -448,9 +461,19 @@ export function AppointmentManagement({
                         </div>
                       </td>
                       <td>
-                        <span className={`status-pill ${status.toLowerCase()}`}>
-                          {status}
-                        </span>
+                        <select
+                          className={`status-pill ${status.toLowerCase()}`}
+                          style={{ cursor: "pointer", border: "1px solid rgba(0,0,0,0.1)", outline: "none", fontWeight: 600 }}
+                          value={status}
+                          onChange={(e) => handleStatusChange(app, e.target.value)}
+                          title="Click to update status"
+                        >
+                          {STATUS_OPTIONS.map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                       <td>
                         <div className="action-button-group">

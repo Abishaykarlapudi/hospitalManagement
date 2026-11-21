@@ -2,26 +2,32 @@ package com.vcube.HospitalManagement.DocTime.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.vcube.HospitalManagement.DocTime.entity.Doctor;
+import com.vcube.HospitalManagement.DocTime.exception.BadRequestException;
+import com.vcube.HospitalManagement.DocTime.exception.ResourceNotFoundException;
 import com.vcube.HospitalManagement.DocTime.repo.DoctorRepo;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {
 
-	@Autowired
-	DoctorRepo doctorRepo;
-	
+	private final DoctorRepo doctorRepo;
+
+	public DoctorServiceImpl(DoctorRepo doctorRepo) {
+		this.doctorRepo = doctorRepo;
+	}
+
 	@Override
-	public ResponseEntity<Doctor> addDoctor(Doctor d) {
-//		if we not keep the responseEnt
-//		return doctorRepo.save(d);
-		return ResponseEntity.status(HttpStatus.CREATED).body(doctorRepo.save(d));
-				
+	public Doctor addDoctor(Doctor d) {
+		if (d.getDoc_email() != null && !d.getDoc_email().isBlank()) {
+			String cleanEmail = d.getDoc_email().trim().toLowerCase();
+			d.setDoc_email(cleanEmail);
+			if (doctorRepo.findByEmail(cleanEmail).isPresent()) {
+				throw new BadRequestException("A doctor with email '" + cleanEmail + "' is already registered in the system.");
+			}
+		}
+		return doctorRepo.save(d);
 	}
 
 	@Override
@@ -31,46 +37,58 @@ public class DoctorServiceImpl implements DoctorService {
 
 	@Override
 	public Doctor getDoctorById(Integer id) {
-		return doctorRepo.findById(id).get();
+		return doctorRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Doctor not found with ID: " + id));
 	}
 
 	@Override
 	public Doctor updateDoctorDetails(Doctor d, Integer id) {
-		
 		Doctor intoDb = getDoctorById(id);
-		intoDb.setDoc_email(d.getDoc_email());
-		intoDb.setDoc_name(d.getDoc_name());
-		intoDb.setDoc_phone_number(d.getDoc_phone_number());
+		if (d.getDoc_name() != null) intoDb.setDoc_name(d.getDoc_name());
+		if (d.getDoc_email() != null) {
+			String cleanEmail = d.getDoc_email().trim().toLowerCase();
+			if (!cleanEmail.equalsIgnoreCase(intoDb.getDoc_email()) && doctorRepo.findByEmail(cleanEmail).isPresent()) {
+				throw new BadRequestException("A doctor with email '" + cleanEmail + "' is already registered.");
+			}
+			intoDb.setDoc_email(cleanEmail);
+		}
+		if (d.getDoc_phone_number() != null) intoDb.setDoc_phone_number(d.getDoc_phone_number());
+		if (d.getDoc_specialization() != null) intoDb.setDoc_specialization(d.getDoc_specialization());
 		return doctorRepo.save(intoDb);
 	}
 
 	@Override
 	public Doctor updateDoctorName(Doctor d, Integer id) {
 		Doctor intoDb = getDoctorById(id);
-		intoDb.setDoc_name(d.getDoc_name());
+		if (d.getDoc_name() != null) intoDb.setDoc_name(d.getDoc_name());
 		return doctorRepo.save(intoDb);
 	}
 
 	@Override
 	public Doctor updateDoctorEmail(Doctor d, Integer id) {
 		Doctor intoDb = getDoctorById(id);
-		intoDb.setDoc_email(d.getDoc_email());
+		if (d.getDoc_email() != null) {
+			String cleanEmail = d.getDoc_email().trim().toLowerCase();
+			if (!cleanEmail.equalsIgnoreCase(intoDb.getDoc_email()) && doctorRepo.findByEmail(cleanEmail).isPresent()) {
+				throw new BadRequestException("A doctor with email '" + cleanEmail + "' is already registered.");
+			}
+			intoDb.setDoc_email(cleanEmail);
+		}
 		return doctorRepo.save(intoDb);
 	}
 
 	@Override
 	public Doctor updateDoctorPhoneNumber(Doctor d, Integer id) {
 		Doctor intoDb = getDoctorById(id);
-		intoDb.setDoc_phone_number(d.getDoc_phone_number());
+		if (d.getDoc_phone_number() != null) intoDb.setDoc_phone_number(d.getDoc_phone_number());
 		return doctorRepo.save(intoDb);
 	}
 
 	@Override
 	public void deleteDoctorById(Integer id) {
+		if (!doctorRepo.existsById(id)) {
+			throw new ResourceNotFoundException("Doctor not found with ID: " + id);
+		}
 		doctorRepo.deleteById(id);
 	}
-
-	
-
-
 }

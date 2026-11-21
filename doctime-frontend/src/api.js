@@ -1,14 +1,14 @@
 import axios from "axios";
 
 // DocTime Spring Boot Backend runs on port 1080
-const API_BASE_URL = "http://localhost:1080";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:1080";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000,
+  timeout: 25000,
 });
 
 // Response interceptor to extract clean error messages

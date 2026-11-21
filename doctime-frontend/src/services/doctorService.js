@@ -9,7 +9,7 @@ export const doctorService = {
 
   // Get doctor by ID
   getById: async (id) => {
-    const res = await api.get(`/doctor/docbyid/${id}`);
+    const res = await api.get(`/doctor/${id}`);
     return res.data;
   },
 
@@ -26,7 +26,7 @@ export const doctorService = {
     return res.data;
   },
 
-  // Update doctor details (Full PUT: doc_name, doc_email, doc_phone_number)
+  // Update doctor details (Full PUT: doc_name, doc_email, doc_phone_number, doc_specialization)
   updateDetails: async (id, doctor) => {
     const payload = {
       doc_name: doctor.doc_name?.trim(),

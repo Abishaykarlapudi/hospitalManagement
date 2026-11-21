@@ -7,9 +7,9 @@ export const patientService = {
     return res.data;
   },
 
-  // Get patient by ID (Backend endpoint is /patient/docbyid/{id})
+  // Get patient by ID
   getById: async (id) => {
-    const res = await api.get(`/patient/docbyid/${id}`);
+    const res = await api.get(`/patient/${id}`);
     return res.data;
   },
 

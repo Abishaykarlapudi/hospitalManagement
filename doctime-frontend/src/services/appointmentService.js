@@ -7,9 +7,21 @@ export const appointmentService = {
     return res.data;
   },
 
-  // Get appointment by ID (Backend endpoint is /appointment/docbyid/{id})
+  // Get appointment by ID
   getById: async (id) => {
-    const res = await api.get(`/appointment/docbyid/${id}`);
+    const res = await api.get(`/appointment/${id}`);
+    return res.data;
+  },
+
+  // Get appointments by doctor ID
+  getByDoctorId: async (docId) => {
+    const res = await api.get(`/appointment/doctor/${docId}`);
+    return res.data;
+  },
+
+  // Get appointments by patient ID
+  getByPatientId: async (patientId) => {
+    const res = await api.get(`/appointment/patient/${patientId}`);
     return res.data;
   },
 
@@ -27,27 +39,29 @@ export const appointmentService = {
   },
 
   // Add new appointment
-  // Body: { doc_id, pa_id, appointment_date, appointment_time, stautes }
+  // Body: { doc_id, pa_id, appointment_date, appointment_time, status }
   create: async (appointment) => {
     const payload = {
       doc_id: Number(appointment.doc_id),
       pa_id: Number(appointment.pa_id),
       appointment_date: appointment.appointment_date,
       appointment_time: appointmentService.formatTime(appointment.appointment_time),
-      stautes: appointment.stautes || "BOOKED",
+      status: appointment.status || appointment.stautes || "BOOKED",
+      stautes: appointment.status || appointment.stautes || "BOOKED",
     };
     const res = await api.post("/appointment/create", payload);
     return res.data;
   },
 
-  // Update appointment details (PUT: appointment_date, appointment_time)
+  // Update appointment details
   updateDetails: async (id, appointment) => {
     const payload = {
       appointment_date: appointment.appointment_date,
       appointment_time: appointmentService.formatTime(appointment.appointment_time),
       ...(appointment.doc_id && { doc_id: Number(appointment.doc_id) }),
       ...(appointment.pa_id && { pa_id: Number(appointment.pa_id) }),
-      ...(appointment.stautes && { stautes: appointment.stautes }),
+      status: appointment.status || appointment.stautes,
+      stautes: appointment.status || appointment.stautes,
     };
     const res = await api.put(`/appointment/updatedetails/${id}`, payload);
     return res.data;
@@ -61,11 +75,20 @@ export const appointmentService = {
     return res.data;
   },
 
-  // PATCH: Update only appointment time (backend endpoint is /updattime/{id})
+  // PATCH: Update only appointment time
   updateTime: async (id, appointment_time) => {
     const formatted = appointmentService.formatTime(appointment_time);
-    const res = await api.patch(`/appointment/updattime/${id}`, {
+    const res = await api.patch(`/appointment/updatetime/${id}`, {
       appointment_time: formatted,
+    });
+    return res.data;
+  },
+
+  // PATCH: Update status (BOOKED, CONFIRMED, COMPLETED, CANCELLED)
+  updateStatus: async (id, status) => {
+    const res = await api.patch(`/appointment/updatestatus/${id}`, {
+      status,
+      stautes: status,
     });
     return res.data;
   },

@@ -1,8 +1,9 @@
 package com.vcube.HospitalManagement.DocTime.controller;
 
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,43 +24,62 @@ import com.vcube.HospitalManagement.DocTime.service.AppointmentService;
 @CrossOrigin(origins = "http://localhost:5173")
 public class AppointmentController {
 
-	@Autowired
-	AppointmentService appointmentService;
-	
+	private final AppointmentService appointmentService;
+
+	public AppointmentController(AppointmentService appointmentService) {
+		this.appointmentService = appointmentService;
+	}
+
 	@PostMapping("/create")
-	public ResponseEntity<Appointment> addAppointment(@RequestBody Appointment d) {
-		return appointmentService.addAppointment(d);
+	public ResponseEntity<Appointment> addAppointment(@RequestBody Appointment a) {
+		Appointment created = appointmentService.addAppointment(a);
+		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
-	
-	@GetMapping("/allAppointments")
-	public List<Appointment> getAllAppointments(){
-		return appointmentService.getAllAppointment();
+
+	@GetMapping({"/allAppointments", "/all"})
+	public ResponseEntity<List<Appointment>> getAllAppointments() {
+		return ResponseEntity.ok(appointmentService.getAllAppointment());
 	}
-	
-	@GetMapping("/docbyid/{id}")
-	public Appointment getDocById(@PathVariable Integer id) {
-		return appointmentService.getAppointmentById(id);
+
+	@GetMapping({"/appointmentbyid/{id}", "/docbyid/{id}", "/{id}"})
+	public ResponseEntity<Appointment> getAppointmentById(@PathVariable Integer id) {
+		return ResponseEntity.ok(appointmentService.getAppointmentById(id));
 	}
-	
-	@PutMapping("/updatedetails/{id}")
-	public Appointment updateDetails(@RequestBody Appointment d, @PathVariable Integer id) {
-		return appointmentService.updateAppointmentDetails(d, id);
+
+	@GetMapping("/doctor/{docId}")
+	public ResponseEntity<List<Appointment>> getAppointmentsByDoctorId(@PathVariable Integer docId) {
+		return ResponseEntity.ok(appointmentService.findBydocid(docId));
 	}
-	
+
+	@GetMapping("/patient/{patientId}")
+	public ResponseEntity<List<Appointment>> getAppointmentsByPatientId(@PathVariable Integer patientId) {
+		return ResponseEntity.ok(appointmentService.findBypaid(patientId));
+	}
+
+	@PutMapping({"/updatedetails/{id}", "/{id}"})
+	public ResponseEntity<Appointment> updateDetails(@RequestBody Appointment a, @PathVariable Integer id) {
+		return ResponseEntity.ok(appointmentService.updateAppointmentDetails(a, id));
+	}
+
 	@PatchMapping("/updatedate/{id}")
-	public Appointment updateName(@RequestBody Appointment d, @PathVariable Integer id) {
-		return appointmentService.updateAppointmentDate(d, id);
+	public ResponseEntity<Appointment> updateDate(@RequestBody Appointment a, @PathVariable Integer id) {
+		return ResponseEntity.ok(appointmentService.updateAppointmentDate(a, id));
 	}
-	
-	@PatchMapping("/updattime/{id}")
-	public Appointment updateEmail(@RequestBody Appointment d, @PathVariable Integer id) {
-		return appointmentService.updateAppointmentTime(d, id);
+
+	@PatchMapping({"/updatetime/{id}", "/updattime/{id}"})
+	public ResponseEntity<Appointment> updateTime(@RequestBody Appointment a, @PathVariable Integer id) {
+		return ResponseEntity.ok(appointmentService.updateAppointmentTime(a, id));
 	}
-	
-	@DeleteMapping("/delete/{id}")
-	public String deleteAppointment(@PathVariable Integer id) {
+
+	@PatchMapping("/updatestatus/{id}")
+	public ResponseEntity<Appointment> updateStatus(@PathVariable Integer id, @RequestBody Map<String, String> statusBody) {
+		String status = statusBody.getOrDefault("status", statusBody.get("stautes"));
+		return ResponseEntity.ok(appointmentService.updateAppointmentStatus(id, status));
+	}
+
+	@DeleteMapping({"/delete/{id}", "/{id}"})
+	public ResponseEntity<String> deleteAppointment(@PathVariable Integer id) {
 		appointmentService.deleteAppointmentById(id);
-		return id+" Appointment deleted";
+		return ResponseEntity.ok("Appointment with ID " + id + " successfully deleted.");
 	}
-	
 }

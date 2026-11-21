@@ -6,28 +6,32 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "doctor_table")
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Doctor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer doc_id;
+	private Integer doc_id;
 
 	@Column(nullable = false)
-	String doc_name;
+	private String doc_name;
 
 	@Column(nullable = false)
-	String doc_specialization;
+	private String doc_specialization;
 
 	@Column(nullable = false)
-	Long doc_phone_number;
+	private Long doc_phone_number;
 
 	@Column(unique = true, nullable = false)
-	String doc_email;
+	private String doc_email;
 }

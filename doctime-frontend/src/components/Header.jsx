@@ -6,6 +6,7 @@ export function Header({
   onRefresh,
   loading,
   counts,
+  customRightElement,
 }) {
   const titles = {
     dashboard: {
@@ -51,13 +52,17 @@ export function Header({
           <span>{loading ? "Refreshing..." : "Sync Data"}</span>
         </button>
 
-        <div className="admin-chip">
-          <ShieldCheck size={18} className="shield-icon" />
-          <div className="admin-chip-text">
-            <strong>Administrator</strong>
-            <small>DocTime Portal</small>
+        {customRightElement ? (
+          customRightElement
+        ) : (
+          <div className="admin-chip">
+            <ShieldCheck size={18} className="shield-icon" />
+            <div className="admin-chip-text">
+              <strong>Administrator</strong>
+              <small>DocTime Portal</small>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </header>
   );

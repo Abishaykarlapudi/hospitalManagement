@@ -2,7 +2,7 @@ package com.vcube.HospitalManagement.DocTime.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,54 +18,56 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vcube.HospitalManagement.DocTime.entity.Patient;
 import com.vcube.HospitalManagement.DocTime.service.PatientService;
 
-
 @RestController
 @RequestMapping("/patient")
 @CrossOrigin(origins = "http://localhost:5173")
 public class PatientController {
 
-	@Autowired
-	PatientService patientService;
-	
+	private final PatientService patientService;
+
+	public PatientController(PatientService patientService) {
+		this.patientService = patientService;
+	}
+
 	@PostMapping("/create")
-	public ResponseEntity<Patient> addPatient(@RequestBody Patient d) {
-		return patientService.addPatient(d);
+	public ResponseEntity<Patient> addPatient(@RequestBody Patient p) {
+		Patient created = patientService.addPatient(p);
+		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
-	
-	@GetMapping("/allPatients")
-	public List<Patient> getAllPatients(){
-		return patientService.getAllPatient();
+
+	@GetMapping({"/allPatients", "/all"})
+	public ResponseEntity<List<Patient>> getAllPatients() {
+		return ResponseEntity.ok(patientService.getAllPatient());
 	}
-	
-	@GetMapping("/docbyid/{id}")
-	public Patient getDocById(@PathVariable Integer id) {
-		return patientService.getPatientById(id);
+
+	@GetMapping({"/patientbyid/{id}", "/docbyid/{id}", "/{id}"})
+	public ResponseEntity<Patient> getPatientById(@PathVariable Integer id) {
+		return ResponseEntity.ok(patientService.getPatientById(id));
 	}
-	
-	@PutMapping("/updatedetails/{id}")
-	public Patient updateDetails(@RequestBody Patient d, @PathVariable Integer id) {
-		return patientService.updatePatientDetails(d, id);
+
+	@PutMapping({"/updatedetails/{id}", "/{id}"})
+	public ResponseEntity<Patient> updateDetails(@RequestBody Patient p, @PathVariable Integer id) {
+		return ResponseEntity.ok(patientService.updatePatientDetails(p, id));
 	}
-	
+
 	@PatchMapping("/updatename/{id}")
-	public Patient updateName(@RequestBody Patient d, @PathVariable Integer id) {
-		return patientService.updatePatientName(d, id);
+	public ResponseEntity<Patient> updateName(@RequestBody Patient p, @PathVariable Integer id) {
+		return ResponseEntity.ok(patientService.updatePatientName(p, id));
 	}
-	
+
 	@PatchMapping("/updatemail/{id}")
-	public Patient updateEmail(@RequestBody Patient d, @PathVariable Integer id) {
-		return patientService.updatePatientEmail(d, id);
+	public ResponseEntity<Patient> updateEmail(@RequestBody Patient p, @PathVariable Integer id) {
+		return ResponseEntity.ok(patientService.updatePatientEmail(p, id));
 	}
-	
-	@PatchMapping("/updateNumber/{id}")
-	public Patient updatePhoneNumber(@RequestBody Patient d, @PathVariable Integer id) {
-		return patientService.updatePatientPhoneNumber(d, id);
+
+	@PatchMapping({"/updateNumber/{id}", "/updatenumber/{id}"})
+	public ResponseEntity<Patient> updatePhoneNumber(@RequestBody Patient p, @PathVariable Integer id) {
+		return ResponseEntity.ok(patientService.updatePatientPhoneNumber(p, id));
 	}
-	
-	@DeleteMapping("/delete/{id}")
-	public String deletePatient(@PathVariable Integer id) {
+
+	@DeleteMapping({"/delete/{id}", "/{id}"})
+	public ResponseEntity<String> deletePatient(@PathVariable Integer id) {
 		patientService.deletePatientById(id);
-		return id+" Patient deleted";
+		return ResponseEntity.ok("Patient with ID " + id + " successfully deleted.");
 	}
-	
 }
